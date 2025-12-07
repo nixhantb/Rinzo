@@ -36,10 +36,6 @@
 
 - [x] **Performance Reports**: Generate detailed reports on hiring performance and timelines.
 
-
-- [ ] **Multi-Language Support**: Cater to a global audience with support for multiple languages.
-
-
 - [x] **Talent Pool Management**: Build and manage a database of potential candidates for future roles.
 
 ## Documentation
