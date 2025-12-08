@@ -1,4 +1,4 @@
-## Contributing to Job Leet
+## Contributing to Rinzo
 
 Thank you for considering contributing to Job Leet! We’re excited to have you help improve the project. To ensure that contributions are smooth and effective, please follow these guidelines:
 
@@ -41,5 +41,5 @@ Thank you for considering contributing to Job Leet! We’re excited to have you 
    - Refactor when necessary to keep the codebase maintainable and efficient.
 
 ### Reporting Issues:
-If you encounter any issues or have suggestions for improvements, please open an issue [here](https://github.com/Nix-code/Job-Leet-core-api/issues) and provide clear details about the problem or enhancement.
+If you encounter any issues or have suggestions for improvements, please open an issue [here](https://github.com/Nix-code/Rinzo/issues) and provide clear details about the problem or enhancement.
 

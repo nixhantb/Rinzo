@@ -26,7 +26,7 @@
   </ItemGroup>
   
   <ItemGroup>
-  <None Update="JobLeet.Resources\Localizations\ErrorMessageManager.csv">
+  <None Update="Rinzo.Resources\Localizations\ErrorMessageManager.csv">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </None>
 </ItemGroup>

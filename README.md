@@ -1,6 +1,7 @@
-![logo](docs/assets/logo.png)
 
-[![CodeQL](https://github.com/nixhantb/Recruitment-erp/actions/workflows/codeql.yml/badge.svg)](https://github.com/nixhantb/Recruitment-erp)
+
+## Rinzo Careers
+![CodeQL](https://github.com/nixhantb/Recruitment-erp/actions/workflows/codeql.yml/badge.svg)](https://github.com/nixhantb/Recruitment-erp)
 
 # Introduction
 
