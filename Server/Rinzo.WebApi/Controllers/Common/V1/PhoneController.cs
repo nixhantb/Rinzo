@@ -6,9 +6,9 @@ using Rinzo.Core.Interfaces.Common.V1;
 namespace Rinzo.WebApi.Controllers.Common.V1
 {
     [Route("api/v1/phones")]
-    public class PhoneController : BaseApiController<Phone, IPhoneService>
+    public class PhoneController : BaseApiController<Phone, IPhoneRepository>
     {
-        public PhoneController(IPhoneService phoneService, IValidator<Phone> validator)
-            : base(phoneService, validator) { }
+        public PhoneController(IPhoneRepository phoneRepository, IValidator<Phone> validator)
+            : base(phoneRepository, validator) { }
     }
 }

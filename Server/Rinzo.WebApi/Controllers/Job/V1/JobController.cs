@@ -9,9 +9,9 @@ namespace Rinzo.WebApi.Controllers.Job.V1
     // [Authorize]
     [Route("api/v1/jobs")]
     [ApiController]
-    public class JobController : BaseApiController<JobEntity, IJobService>
+    public class JobController : BaseApiController<JobEntity, IJobRepository>
     {
-        public JobController(IJobService jobService, IValidator<JobEntity> validator)
-            : base(jobService, validator) { }
+        public JobController(IJobRepository jobRepository, IValidator<JobEntity> validator)
+            : base(jobRepository, validator) { }
     }
 }

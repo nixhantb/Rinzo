@@ -6,12 +6,12 @@ using Rinzo.Core.Interfaces.Common.V1;
 namespace Rinzo.WebApi.Controllers.Common.V1
 {
     [Route("api/v1/experiences")]
-    public class ExperienceController : BaseApiController<Experience, IExperienceService>
+    public class ExperienceController : BaseApiController<Experience, IExperienceRepository>
     {
         public ExperienceController(
-            IExperienceService experienceService,
+            IExperienceRepository experienceRepository,
             IValidator<Experience> validator
         )
-            : base(experienceService, validator) { }
+            : base(experienceRepository, validator) { }
     }
 }

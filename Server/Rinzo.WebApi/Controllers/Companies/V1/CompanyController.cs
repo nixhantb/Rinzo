@@ -6,9 +6,12 @@ using Rinzo.Core.Interfaces.Companies.V1;
 namespace Rinzo.WebApi.Controllers.Companies.V1
 {
     [Route("api/v1/companies")]
-    public class CompanyController : BaseApiController<Company, ICompanyService>
+    public class CompanyController : BaseApiController<Company, ICompanyRepository>
     {
-        public CompanyController(ICompanyService companyService, IValidator<Company> validator)
-            : base(companyService, validator) { }
+        public CompanyController(
+            ICompanyRepository companyRepository,
+            IValidator<Company> validator
+        )
+            : base(companyRepository, validator) { }
     }
 }

@@ -8,9 +8,12 @@ namespace Rinzo.WebApi.Controllers.Job.V1
 {
     [Authorize]
     [Route("api/v1/employers")]
-    public class EmployerController : BaseApiController<Employer, IEmployerService>
+    public class EmployerController : BaseApiController<Employer, IEmployerRepository>
     {
-        public EmployerController(IEmployerService employerService, IValidator<Employer> validator)
-            : base(employerService, validator) { }
+        public EmployerController(
+            IEmployerRepository employerRepository,
+            IValidator<Employer> validator
+        )
+            : base(employerRepository, validator) { }
     }
 }

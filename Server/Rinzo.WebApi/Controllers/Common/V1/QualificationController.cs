@@ -6,12 +6,13 @@ using Rinzo.Core.Interfaces.Common.V1;
 namespace Rinzo.WebApi.Controllers.Common.V1
 {
     [Route("api/v1/qualification-types")]
-    public class QualificationController : BaseApiController<Qualification, IQualificationService>
+    public class QualificationController
+        : BaseApiController<Qualification, IQualificationTypeRepository>
     {
         public QualificationController(
-            IQualificationService qualificationService,
+            IQualificationTypeRepository qualificationRepository,
             IValidator<Qualification> validator
         )
-            : base(qualificationService, validator) { }
+            : base(qualificationRepository, validator) { }
     }
 }

@@ -6,12 +6,12 @@ using Rinzo.Core.Interfaces.Common.V1;
 namespace Rinzo.WebApi.Controllers.Common.V1
 {
     [Route("api/v1/person-names")]
-    public class PersonNameController : BaseApiController<PersonName, IPersonNameService>
+    public class PersonNameController : BaseApiController<PersonName, IPersonNameRepository>
     {
         public PersonNameController(
-            IPersonNameService personNameService,
+            IPersonNameRepository personNameRepository,
             IValidator<PersonName> validator
         )
-            : base(personNameService, validator) { }
+            : base(personNameRepository, validator) { }
     }
 }

@@ -6,16 +6,16 @@ namespace Rinzo.WebApi.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public abstract class BaseApiController<TEntity, TService> : ControllerBase
+    public abstract class BaseApiController<TEntity, TRepository> : ControllerBase
         where TEntity : class
-        where TService : IService<TEntity>
+        where TRepository : IRepository<TEntity>
     {
-        protected readonly TService _service;
+        protected readonly TRepository _repository;
         protected readonly IValidator<TEntity> _validator;
 
-        protected BaseApiController(TService service, IValidator<TEntity> validator)
+        protected BaseApiController(TRepository repository, IValidator<TEntity> validator)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
@@ -25,7 +25,7 @@ namespace Rinzo.WebApi.Controllers
         [HttpGet]
         public virtual async Task<IActionResult> GetAllAsync()
         {
-            var entities = await _service.GetAllAsync();
+            var entities = await _repository.GetAllAsync();
             return Ok(entities);
         }
         #endregion
@@ -36,7 +36,7 @@ namespace Rinzo.WebApi.Controllers
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> GetByIdAsync(string id)
         {
-            var entity = await _service.GetByIdAsync(id);
+            var entity = await _repository.GetByIdAsync(id);
 
             if (entity == null)
                 return NotFound();
@@ -74,7 +74,7 @@ namespace Rinzo.WebApi.Controllers
                 );
             }
 
-            var result = await _service.AddAsync(entity);
+            var result = await _repository.AddAsync(entity);
             return Ok(result);
         }
         #endregion

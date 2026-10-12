@@ -6,9 +6,9 @@ using Rinzo.Core.Interfaces.Common.V1;
 namespace Rinzo.WebApi.Controllers.Common.V1
 {
     [Route("api/v1/skills")]
-    public class SkillController : BaseApiController<Skill, ISkillService>
+    public class SkillController : BaseApiController<Skill, ISkillRepository>
     {
-        public SkillController(ISkillService skillService, IValidator<Skill> validator)
-            : base(skillService, validator) { }
+        public SkillController(ISkillRepository skillRepository, IValidator<Skill> validator)
+            : base(skillRepository, validator) { }
     }
 }

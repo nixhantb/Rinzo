@@ -7,18 +7,18 @@ namespace Rinzo.WebApi.Controllers.Job.V1
 {
     [Route("api/v1/applications")]
     [ApiController]
-    public class ApplicationController : BaseApiController<Application, IApplicationService>
+    public class ApplicationController : BaseApiController<Application, IApplicationRepository>
     {
         public ApplicationController(
-            IApplicationService applicationService,
+            IApplicationRepository applicationRepository,
             IValidator<Application> validator
         )
-            : base(applicationService, validator) { }
+            : base(applicationRepository, validator) { }
 
         [HttpGet("seekers/{seekerId}")]
         public async Task<IActionResult> GetBySeekersIdAsync([FromRoute] string seekerId)
         {
-            var applicationBySeekersId = await _service.GetApplicationBySeekersId(seekerId);
+            var applicationBySeekersId = await _repository.GetApplicationBySeekersId(seekerId);
             return Ok(applicationBySeekersId);
         }
 
@@ -29,7 +29,7 @@ namespace Rinzo.WebApi.Controllers.Job.V1
             [FromQuery] string companyId
         )
         {
-            var application = await _service.ApplyForJobAsync(seekerId, jobId, companyId);
+            var application = await _repository.ApplyForJobAsync(seekerId, jobId, companyId);
             return Ok(application);
         }
     }

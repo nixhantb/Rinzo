@@ -6,9 +6,12 @@ using Rinzo.Core.Interfaces.Common.V1;
 namespace Rinzo.WebApi.Controllers.Common.V1
 {
     [Route("api/v1/addresses")]
-    public class AddressController : BaseApiController<Address, IAddressService>
+    public class AddressController : BaseApiController<Address, IAddressRepository>
     {
-        public AddressController(IAddressService addressRepository, IValidator<Address> validator)
+        public AddressController(
+            IAddressRepository addressRepository,
+            IValidator<Address> validator
+        )
             : base(addressRepository, validator) { }
     }
 }

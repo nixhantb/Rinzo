@@ -8,9 +8,9 @@ namespace Rinzo.WebApi.Controllers.Job.V1
 {
     [Authorize]
     [Route("api/v1/seekers")]
-    public class SeekersController : BaseApiController<Seeker, ISeekerService>
+    public class SeekersController : BaseApiController<Seeker, ISeekerRepository>
     {
-        public SeekersController(ISeekerService seekerService, IValidator<Seeker> validator)
-            : base(seekerService, validator) { }
+        public SeekersController(ISeekerRepository seekerRepository, IValidator<Seeker> validator)
+            : base(seekerRepository, validator) { }
     }
 }

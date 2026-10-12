@@ -15,7 +15,6 @@ using Rinzo.Core.Interfaces.Companies.V1;
 using Rinzo.Core.Interfaces.Employers.V1;
 using Rinzo.Core.Interfaces.Jobs.V1;
 using Rinzo.Core.Interfaces.Seekers.V1;
-using Rinzo.Core.Services;
 using Rinzo.Core.Validators;
 using Rinzo.Core.Validators.Jobs;
 using Rinzo.Core.Validators.Seekers;
@@ -41,60 +40,44 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<DbContext, BaseDBContext>();
 
 builder.Services.AddScoped<IEmaiTypeRepository, EmailTypeRepository>();
-builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IValidator<Email>, EmailValidator>();
 
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
-builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IValidator<Skill>, SkillValidator>();
 
 builder.Services.AddScoped<IPersonNameRepository, PersonNameRepository>();
-builder.Services.AddScoped<IPersonNameService, PersonNameService>();
 builder.Services.AddScoped<IValidator<PersonName>, PersonNameValidator>();
 
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
-builder.Services.AddScoped<IExperienceService, ExperienceService>();
 builder.Services.AddScoped<IValidator<Experience>, ExperienceValidator>();
 
 builder.Services.AddScoped<IQualificationTypeRepository, QualificationTypeRepository>();
-builder.Services.AddScoped<IQualificationService, QualificationService>();
 builder.Services.AddScoped<IValidator<Qualification>, QualificationValidator>();
 
 builder.Services.AddScoped<IPhoneRepository, PhoneRepository>();
-builder.Services.AddScoped<IPhoneService, PhoneService>();
 builder.Services.AddScoped<IValidator<Phone>, PhoneValidator>();
 
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
-builder.Services.AddScoped<IEducationService, EducationService>();
 builder.Services.AddScoped<IValidator<Education>, EducationValidator>();
 
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IValidator<Address>, AddressValidator>();
 
-builder.Services.AddScoped<IQualificationService, QualificationService>();
-
 builder.Services.AddScoped<IJobRepository, JobRepository>();
-builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IValidator<JobEntity>, JobEntityValidator>();
 
 builder.Services.AddScoped<ISeekerRepository, SeekersRepository>();
-builder.Services.AddScoped<ISeekerService, SeekersService>();
 builder.Services.AddScoped<IValidator<Seeker>, SeekerValidator>();
 
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IValidator<Company>, CompanyValidator>();
 
 builder.Services.AddScoped<IIndustryTypeRepository, IndustryTypeRepository>();
-builder.Services.AddScoped<IIndustryTypeService, IndustryTypeService>();
 
-builder.Services.AddScoped<IEmployerService, EmployerService>();
 builder.Services.AddScoped<IEmployerRepository, EmployersRepository>();
 builder.Services.AddScoped<IValidator<Employer>, EmployerValidator>();
 
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
-builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IValidator<Application>, ApplicationValidator>();
 
 builder
