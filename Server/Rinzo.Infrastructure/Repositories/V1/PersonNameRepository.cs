@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Rinzo.Core.Models.Common.V1;
+﻿using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 using Rinzo.Infrastructure.Data.Contexts;
@@ -25,25 +24,15 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
         /// <remarks>This method fetches all person names from the database using Entity Framework Core.</remarks>
         public async Task<List<PersonNameModel>> GetAllAsync()
         {
-            try
-            {
-                var result = await _dbContext
-                    .PersonNames.Select(e => new PersonNameModel
-                    {
-                        Id = e.Id,
-                        FirstName = e.FirstName,
-                        MiddleName = e.MiddleName,
-                        LastName = e.LastName,
-                    })
-                    .ToListAsync();
-                return result;
-            }
-            catch (Exception ex) when (ex is DbUpdateException || ex is DbException)
-            {
-                throw new Exception(
-                    "Error while fetching data from the database. Please try again later."
-                );
-            }
+            return await _dbContext
+                .PersonNames.Select(e => new PersonNameModel
+                {
+                    Id = e.Id,
+                    FirstName = e.FirstName,
+                    MiddleName = e.MiddleName,
+                    LastName = e.LastName,
+                })
+                .ToListAsync();
         }
         #endregion
 
@@ -53,28 +42,17 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
         /// <remarks>This method fetches all person names from the database using Entity Framework Core.</remarks>
         public async Task<PersonNameModel> GetByIdAsync(string id)
         {
-            try
-            {
-                var person = await _dbContext
-                    .PersonNames.Where(e => e.Id == id)
-                    .Select(e => new PersonNameModel
-                    {
-                        Id = e.Id,
-                        FirstName = e.FirstName,
-                        MiddleName = e.MiddleName,
-                        LastName = e.LastName,
-                    })
-                    .FirstOrDefaultAsync();
-                return person == null
-                    ? throw new KeyNotFoundException($"PersonName with id {id} not found")
-                    : person;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    $"An Error occured while fetching a person with id: {id}: {ex.Message}"
-                );
-            }
+            var person = await _dbContext
+                .PersonNames.Where(e => e.Id == id)
+                .Select(e => new PersonNameModel
+                {
+                    Id = e.Id,
+                    FirstName = e.FirstName,
+                    MiddleName = e.MiddleName,
+                    LastName = e.LastName,
+                })
+                .FirstOrDefaultAsync();
+            return person ?? throw new KeyNotFoundException($"PersonName with id {id} not found");
         }
         #endregion
         public Task<PersonNameModel> AddAsync(PersonName entity)

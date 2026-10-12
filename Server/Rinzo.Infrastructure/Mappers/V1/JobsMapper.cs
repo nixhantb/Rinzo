@@ -82,8 +82,7 @@ namespace Rinzo.Infrastructure.Mappers.V1
                     model.RequiredQualification != null
                         ? new QualificationModel
                         {
-                            QualificationType = (Rinzo.Core.Models.Common.V1.QualificationCategory)
-                                model.RequiredQualification.QualificationType,
+                            QualificationType = model.RequiredQualification.QualificationType,
                             QualificationInformation = model
                                 .RequiredQualification
                                 .QualificationInformation,
@@ -93,8 +92,7 @@ namespace Rinzo.Infrastructure.Mappers.V1
                     model.RequiredExperience != null
                         ? new()
                         {
-                            ExperienceLevel = (Rinzo.Core.Models.Common.V1.ExperienceLevel)
-                                model.RequiredExperience.ExperienceLevel,
+                            ExperienceLevel = model.RequiredExperience.ExperienceLevel,
                         }
                         : null,
                 PreferredQualifications = model.PreferredQualifications,

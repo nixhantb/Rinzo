@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Rinzo.Core.Entities.Common.V1;
 
 namespace Rinzo.Core.Models.Common.V1
 {

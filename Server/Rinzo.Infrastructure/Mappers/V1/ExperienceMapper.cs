@@ -27,7 +27,7 @@ namespace Rinzo.Infrastructure.Mappers.V1
                     Id = ex.Id,
                     CompanyNameModel = ex.Company,
                     Responsibilities = ex.Responsibilities,
-                    ExperienceLevel = (Rinzo.Core.Models.Common.V1.ExperienceLevel)ex.ExperienceLevel,
+                    ExperienceLevel = ex.ExperienceLevel,
                     ExperienceDateTill = ex.ExperienceDateTill,
                 })
                 .ToList();

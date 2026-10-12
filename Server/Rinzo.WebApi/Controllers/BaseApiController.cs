@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using Rinzo.WebApi.Exceptions;
-using Rinzo.WebApi.Logging;
 using Rinzo.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,20 +27,8 @@ namespace Rinzo.WebApi.Controllers
         [HttpGet]
         public virtual async Task<IActionResult> GetAllAsync()
         {
-            try
-            {
-                var entities = await _service.GetAllAsync();
-                return Ok(entities);
-            }
-            catch (Exception ex)
-            {
-                var errorResponse = new GlobalErrorResponse
-                {
-                    Error = "Internal Server Error",
-                    Message = ex.Message,
-                };
-                return StatusCode(500, errorResponse);
-            }
+            var entities = await _service.GetAllAsync();
+            return Ok(entities);
         }
         #endregion
 
@@ -53,24 +39,12 @@ namespace Rinzo.WebApi.Controllers
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> GetByIdAsync(string id)
         {
-            try
-            {
-                var entity = await _service.GetByIdAsync(id);
+            var entity = await _service.GetByIdAsync(id);
 
-                if (entity == null)
-                    return NotFound();
+            if (entity == null)
+                return NotFound();
 
-                return Ok(entity);
-            }
-            catch (Exception ex)
-            {
-                var errorResponse = new GlobalErrorResponse
-                {
-                    Error = "System Exception",
-                    Message = ex.Message,
-                };
-                return StatusCode(400, errorResponse);
-            }
+            return Ok(entity);
         }
         #endregion
 
@@ -83,40 +57,29 @@ namespace Rinzo.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public virtual async Task<IActionResult> CreateAsync([FromBody] TEntity entity)
         {
-            try
+            if (entity == null)
             {
-                if (entity == null)
-                {
-                    return BadRequest();
-                }
-                var validationResult = _validator.Validate(entity);
-                if (!validationResult.IsValid)
-                {
-                    return BadRequest(
-                        new
-                        {
-                            Message = "Validation failed.",
-                            Errors = validationResult.Errors.Select(e => new
-                            {
-                                e.PropertyName,
-                                e.ErrorMessage,
-                            }),
-                        }
-                    );
-                }
-                var result = await _service.AddAsync(entity);
+                return BadRequest();
+            }
 
-                return Ok(result);
-            }
-            catch (Exception ex)
+            var validationResult = _validator.Validate(entity);
+            if (!validationResult.IsValid)
             {
-                var errorResponse = new GlobalErrorResponse
-                {
-                    Error = "System Exception",
-                    Message = ex.Message,
-                };
-                return StatusCode(400, errorResponse);
+                return BadRequest(
+                    new
+                    {
+                        Message = "Validation failed.",
+                        Errors = validationResult.Errors.Select(e => new
+                        {
+                            e.PropertyName,
+                            e.ErrorMessage,
+                        }),
+                    }
+                );
             }
+
+            var result = await _service.AddAsync(entity);
+            return Ok(result);
         }
         #endregion
     }

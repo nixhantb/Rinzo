@@ -1,4 +1,3 @@
-using System.Data.Common;
 using Rinzo.Core.Models.Jobs.V1;
 using Rinzo.Core.Entities.Jobs.V1;
 using Rinzo.Core.Interfaces.Jobs.V1;
@@ -22,26 +21,12 @@ namespace Rinzo.Infrastructure.Repositories.Jobs.V1
 
         public async Task<JobModel> AddAsync(JobEntity entity)
         {
-            try
-            {
-                #region  To Rinzo DB
+            var saveToDb = JobsMapper.ToJobDatabase(entity);
 
-                var saveToDb = JobsMapper.ToJobDatabase(entity);
+            _dbContext.Jobs.Add(saveToDb);
+            await _dbContext.SaveChangesAsync();
 
-                _dbContext.Jobs.Add(saveToDb);
-                await _dbContext.SaveChangesAsync();
-                #endregion
-
-                #region  To Api Response
-                var apiResponses = JobsMapper.ToJobModel(saveToDb);
-
-                #endregion
-                return apiResponses;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error occurred while logging in: {ex.Message}");
-            }
+            return JobsMapper.ToJobModel(saveToDb);
         }
 
         public async Task DeleteAsync(string id)
@@ -51,72 +36,49 @@ namespace Rinzo.Infrastructure.Repositories.Jobs.V1
 
         public async Task<List<JobModel>> GetAllAsync()
         {
-            try
-            {
-                var entities = await _dbContext
-                    .Jobs.Include(j => j.CompanyDescription)
-                    .ThenInclude(c => c.Profile)
-                    .ThenInclude(p => p.ContactEmail)
-                    .Include(j => j.CompanyDescription)
-                    .ThenInclude(c => c.Profile)
-                    .ThenInclude(p => p.CompanyAddress)
-                    .Include(j => j.CompanyDescription)
-                    .ThenInclude(c => c.Profile)
-                    .ThenInclude(p => p.ContactPhone)
-                    .Include(j => j.JobAddress)
-                    .Include(j => j.SkillsRequired)
-                    .Include(j => j.RequiredQualification)
-                    .Include(j => j.RequiredExperience)
-                    .ToListAsync();
+            var entities = await _dbContext
+                .Jobs.Include(j => j.CompanyDescription)
+                .ThenInclude(c => c.Profile)
+                .ThenInclude(p => p.ContactEmail)
+                .Include(j => j.CompanyDescription)
+                .ThenInclude(c => c.Profile)
+                .ThenInclude(p => p.CompanyAddress)
+                .Include(j => j.CompanyDescription)
+                .ThenInclude(c => c.Profile)
+                .ThenInclude(p => p.ContactPhone)
+                .Include(j => j.JobAddress)
+                .Include(j => j.SkillsRequired)
+                .Include(j => j.RequiredQualification)
+                .Include(j => j.RequiredExperience)
+                .ToListAsync();
 
-                var apiResponses = entities
-                    .Select(entity => JobsMapper.ToJobModel(entity))
-                    .ToList();
-                return apiResponses;
-            }
-            catch (Exception ex) when (ex is DbUpdateException || ex is DbException)
-            {
-                throw new Exception(
-                    "Error while fetching data from the database. Please try again later."
-                );
-            }
+            return entities.Select(entity => JobsMapper.ToJobModel(entity)).ToList();
         }
 
         public async Task<JobModel> GetByIdAsync(string id)
         {
-            try
-            {
-                var jobEntry = await _dbContext
-                    .Jobs.Include(j => j.CompanyDescription)
-                    .ThenInclude(c => c.Profile)
-                    .ThenInclude(p => p.ContactEmail)
-                    .Include(j => j.CompanyDescription)
-                    .ThenInclude(c => c.Profile)
-                    .ThenInclude(p => p.CompanyAddress)
-                    .Include(j => j.CompanyDescription)
-                    .ThenInclude(c => c.Profile)
-                    .ThenInclude(p => p.ContactPhone)
-                    .Include(j => j.JobAddress)
-                    .Include(j => j.SkillsRequired)
-                    .Include(j => j.RequiredQualification)
-                    .Include(j => j.RequiredExperience)
-                    .FirstOrDefaultAsync(j => j.Id == id);
+            var jobEntry = await _dbContext
+                .Jobs.Include(j => j.CompanyDescription)
+                .ThenInclude(c => c.Profile)
+                .ThenInclude(p => p.ContactEmail)
+                .Include(j => j.CompanyDescription)
+                .ThenInclude(c => c.Profile)
+                .ThenInclude(p => p.CompanyAddress)
+                .Include(j => j.CompanyDescription)
+                .ThenInclude(c => c.Profile)
+                .ThenInclude(p => p.ContactPhone)
+                .Include(j => j.JobAddress)
+                .Include(j => j.SkillsRequired)
+                .Include(j => j.RequiredQualification)
+                .Include(j => j.RequiredExperience)
+                .FirstOrDefaultAsync(j => j.Id == id);
 
-                if (jobEntry == null)
-                {
-                    throw new Exception($"The Job with ID {id} does not exist.");
-                }
-
-                var jobModel = JobsMapper.ToJobModel(jobEntry);
-                return jobModel;
-            }
-            catch (Exception ex) when (ex is DbUpdateException || ex is DbException)
+            if (jobEntry == null)
             {
-                throw new Exception(
-                    "The Job with the requested ID doesn't exist or a database exception occurred.",
-                    ex
-                );
+                throw new KeyNotFoundException($"Job with id {id} not found");
             }
+
+            return JobsMapper.ToJobModel(jobEntry);
         }
 
         public async Task UpdateAsync(JobEntity entity)

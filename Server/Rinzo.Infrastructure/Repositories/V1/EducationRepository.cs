@@ -1,11 +1,8 @@
-﻿using System.Data.Common;
-using Rinzo.Infrastructure.Caching;
-using Rinzo.Core.Models.Common.V1;
+﻿using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 using Rinzo.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Rinzo.Infrastructure.Repositories.Common.V1
 {
@@ -14,12 +11,10 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
         #region Initialization
         // <returns>The list of initializations</returns>
         private readonly BaseDBContext _dbContext;
-        private readonly BaseCacheHelper<List<EducationModel>> _cacheHelper;
 
-        public EducationRepository(BaseDBContext dbContext, IMemoryCache memoryCache)
+        public EducationRepository(BaseDBContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _cacheHelper = new BaseCacheHelper<List<EducationModel>>(memoryCache);
         }
         #endregion
         public Task<EducationModel> AddAsync(Education entity)
@@ -38,39 +33,17 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
         /// <remarks>This method fetches all educations from the database using Entity Framework Core.</remarks>
         public async Task<List<EducationModel>> GetAllAsync()
         {
-            var cacheKey = CacheHelper.CacheKey("RandomKey");
-            MemoryCacheEntryOptions cacheOptions = CacheHelper.GetCacheOptions(
-                TimeSpan.FromMinutes(1)
-            );
-            return await _cacheHelper.GetCachedResponse(
-                cacheKey,
-                async () =>
+            return await _dbContext
+                .Educations.Select(e => new EducationModel
                 {
-                    try
-                    {
-                        var results = await _dbContext
-                            .Educations.Select(e => new EducationModel
-                            {
-                                Id = e.Id,
-                                Degree = e.Degree,
-                                Major = e.Major,
-                                Institution = e.Institution,
-                                GraduationDate = e.GraduationDate,
-                                Cgpa = e.Cgpa,
-                            })
-                            .ToListAsync();
-
-                        return results;
-                    }
-                    catch (Exception ex) when (ex is DbUpdateException || ex is DbException)
-                    {
-                        throw new Exception(
-                            "Error while fetching data from the database. Please try again later."
-                        );
-                    }
-                },
-                cacheOptions
-            );
+                    Id = e.Id,
+                    Degree = e.Degree,
+                    Major = e.Major,
+                    Institution = e.Institution,
+                    GraduationDate = e.GraduationDate,
+                    Cgpa = e.Cgpa,
+                })
+                .ToListAsync();
         }
         #endregion
 

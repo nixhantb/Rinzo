@@ -19,22 +19,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NLog" Version="5.2.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Rinzo.Core\Rinzo.Core.csproj" />
     <ProjectReference Include="..\Rinzo.Infrastructure\Rinzo.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Physically lives in Rinzo.Core (shared localized error copy); linked here so it lands
-         next to the running app, where ErrorMessageManager reads it from at startup. -->
-    <None Include="..\Rinzo.Core\Resources\Localizations\ErrorMessageManager.csv"
-          Link="Resources\Localizations\ErrorMessageManager.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

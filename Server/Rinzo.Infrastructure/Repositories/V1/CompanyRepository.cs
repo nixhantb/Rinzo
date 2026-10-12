@@ -21,24 +21,16 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
 
         public async Task<CompanyModel> AddAsync(Company entity)
         {
-            try
+            if (entity == null)
             {
-                if (entity == null)
-                {
-                    throw new ArgumentNullException(nameof(entity));
-                }
-
-                var saveToDb = CompanyMapper.ToCompanyDataBase(entity);
-                await _dbContext.Companies.AddAsync(saveToDb);
-                await _dbContext.SaveChangesAsync();
-
-                var apiResponse = CompanyMapper.ToCompanyModel(saveToDb);
-                return apiResponse;
+                throw new ArgumentNullException(nameof(entity));
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error adding company", ex);
-            }
+
+            var saveToDb = CompanyMapper.ToCompanyDataBase(entity);
+            await _dbContext.Companies.AddAsync(saveToDb);
+            await _dbContext.SaveChangesAsync();
+
+            return CompanyMapper.ToCompanyModel(saveToDb);
         }
 
         public Task DeleteAsync(string id)
@@ -48,54 +40,40 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
 
         public async Task<List<CompanyModel>> GetAllAsync()
         {
-            try
-            {
-                var companies = await _dbContext
-                    .Companies.Include(c => c.Profile)
-                    .ThenInclude(p => p.ContactEmail)
-                    .Include(c => c.Profile)
-                    .ThenInclude(p => p.CompanyAddress)
-                    .Include(c => c.Profile)
-                    .ThenInclude(p => p.ContactPhone)
-                    .Include(c => c.Profile)
-                    .ThenInclude(p => p.IndustryTypes)
-                    .ToListAsync();
+            var companies = await _dbContext
+                .Companies.Include(c => c.Profile)
+                .ThenInclude(p => p.ContactEmail)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.CompanyAddress)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.ContactPhone)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.IndustryTypes)
+                .ToListAsync();
 
-                return companies.Select(CompanyMapper.ToCompanyModel).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error Retriving company", ex);
-            }
+            return companies.Select(CompanyMapper.ToCompanyModel).ToList();
         }
 
         public async Task<CompanyModel> GetByIdAsync(string id)
         {
-            try
-            {
-                var company = await _dbContext
-                    .Companies.Where(c => c.Id.Equals(id))
-                    .Include(c => c.Profile)
-                    .ThenInclude(p => p.ContactEmail)
-                    .Include(c => c.Profile)
-                    .ThenInclude(p => p.CompanyAddress)
-                    .Include(c => c.Profile)
-                    .ThenInclude(p => p.ContactPhone)
-                    .Include(c => c.Profile)
-                    .ThenInclude(p => p.IndustryTypes)
-                    .FirstOrDefaultAsync();
+            var company = await _dbContext
+                .Companies.Where(c => c.Id.Equals(id))
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.ContactEmail)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.CompanyAddress)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.ContactPhone)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.IndustryTypes)
+                .FirstOrDefaultAsync();
 
-                if (company == null)
-                {
-                    throw new KeyNotFoundException($"Company with id {id} not found");
-                }
-                var companyModel = CompanyMapper.ToCompanyModel(company);
-                return companyModel;
-            }
-            catch (Exception ex)
+            if (company == null)
             {
-                throw new Exception("Error retrieving company by id", ex);
+                throw new KeyNotFoundException($"Company with id {id} not found");
             }
+
+            return CompanyMapper.ToCompanyModel(company);
         }
 
         public Task UpdateAsync(Company entity)

@@ -83,12 +83,7 @@ namespace Rinzo.Infrastructure.Mappers.V1
                                     ? new Rinzo.Core.Models.Companies.V1.IndustryModel
                                     {
                                         Id = entity.Profile.IndustryTypes.Id,
-                                        IndustryType =
-                                            entity?.Profile.IndustryTypes.IndustryType != null
-                                                ? (Rinzo.Core.Models.Companies.V1.IndustryCategory)(
-                                                    entity.Profile.IndustryTypes.IndustryType
-                                                )
-                                                : default(Rinzo.Core.Models.Companies.V1.IndustryCategory),
+                                        IndustryType = entity.Profile.IndustryTypes.IndustryType,
                                     }
                                     : null,
                             Website = entity?.Profile.Website,

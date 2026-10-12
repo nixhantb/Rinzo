@@ -74,7 +74,7 @@ namespace Rinzo.Infrastructure.Mappers.V1
                         ? new StatusModel
                         {
                             Id = model.Id,
-                            StatusName = (Rinzo.Core.Models.Jobs.V1.StatusName)model.Status.StatusName,
+                            StatusName = model.Status.StatusName,
                         }
                         : null,
             };

@@ -96,8 +96,7 @@ namespace Rinzo.Infrastructure.Mappers.V1
                     .Qualifications?.Select(q => new QualificationModel
                     {
                         Id = q.Id,
-                        QualificationType = (Rinzo.Core.Models.Common.V1.QualificationCategory)
-                            q.QualificationType,
+                        QualificationType = q.QualificationType,
                         QualificationInformation = q.QualificationInformation,
                     })
                     .ToList(),

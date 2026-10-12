@@ -25,25 +25,17 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
 
         public async Task<ApplicationModel> AddAsync(Application entity)
         {
-            try
+            if (entity == null)
             {
-                if (entity == null)
-                {
-                    throw new ArgumentNullException(nameof(entity));
-                }
-                var userId = _authContext.Users.FirstOrDefault()?.Id;
-
-                var saveToDb = ApplicationMapper.ToApplicationDataBase(entity, userId);
-                await _dbContext.Applications.AddAsync(saveToDb);
-                await _dbContext.SaveChangesAsync();
-
-                var apiResponse = ApplicationMapper.ToApplicationModel(saveToDb);
-                return apiResponse;
+                throw new ArgumentNullException(nameof(entity));
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error adding company", ex);
-            }
+            var userId = _authContext.Users.FirstOrDefault()?.Id;
+
+            var saveToDb = ApplicationMapper.ToApplicationDataBase(entity, userId);
+            await _dbContext.Applications.AddAsync(saveToDb);
+            await _dbContext.SaveChangesAsync();
+
+            return ApplicationMapper.ToApplicationModel(saveToDb);
         }
 
         public async Task<Application> ApplyForJobAsync(
@@ -52,85 +44,64 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
             string companyId
         )
         {
-            try
+            var seeker = await _dbContext
+                .Seekers.Include(s => s.Phone)
+                .Include(s => s.Education)
+                .Include(s => s.Address)
+                .Include(s => s.Skills)
+                .FirstOrDefaultAsync(s => s.Id == seekerId);
+            if (seeker == null)
             {
-                var seeker = await _dbContext
-                    .Seekers.Include(s => s.Phone)
-                    .Include(s => s.Education)
-                    .Include(s => s.Address)
-                    .Include(s => s.Skills)
-                    .FirstOrDefaultAsync(s => s.Id == seekerId);
-                if (seeker == null)
-                {
-                    throw new Exception($"Seeker with ID {seekerId} not found");
-                }
-
-                var company = await _dbContext
-                    .Companies.Include(c => c.Profile)
-                    .FirstOrDefaultAsync(c => c.Id == companyId);
-                if (company == null)
-                {
-                    throw new Exception($"Company with ID {companyId} not found");
-                }
-
-                var job = await _dbContext
-                    .Jobs.Include(j => j.CompanyDescription)
-                    .Include(j => j.SkillsRequired)
-                    .FirstOrDefaultAsync(j => j.Id == jobId);
-                if (job == null)
-                {
-                    throw new Exception($"Job with ID {jobId} not found.");
-                }
-
-                var existingApplication = await _dbContext.Applications.FirstOrDefaultAsync(a =>
-                    a.SeekerId == seekerId && a.JobsId == jobId
-                );
-                if (existingApplication != null)
-                {
-                    throw new Exception("Seeker has already applied for this job.");
-                }
-
-                var application = new Application
-                {
-                    SeekerId = seekerId,
-                    JobsId = jobId,
-                    CompanyId = companyId,
-                    Seekers = null,
-                    Jobs = null,
-                    Company = null,
-                    ApplicationDate = new()
-                    {
-                        SubmitDate = DateTime.UtcNow,
-                        ReviewDate = DateTime.UtcNow,
-                        DecisionDate = DateTime.UtcNow,
-                        Comments = "Successfully Applied to the new Job",
-                    },
-                    Status = new Status
-                    {
-                        StatusName = Rinzo.Core.Entities.Jobs.V1.StatusName.Active,
-                    },
-                };
-
-                _dbContext.Add(application);
-
-                try
-                {
-                    await _dbContext.SaveChangesAsync();
-                }
-                catch (DbUpdateException dbEx)
-                {
-                    throw new Exception(
-                        "Database update error occurred.",
-                        dbEx.InnerException ?? dbEx
-                    );
-                }
-
-                return application;
+                throw new KeyNotFoundException($"Seeker with id {seekerId} not found");
             }
-            catch (Exception ex)
+
+            var company = await _dbContext
+                .Companies.Include(c => c.Profile)
+                .FirstOrDefaultAsync(c => c.Id == companyId);
+            if (company == null)
             {
-                throw new Exception("Error occurred while applying for the job.", ex);
+                throw new KeyNotFoundException($"Company with id {companyId} not found");
             }
+
+            var job = await _dbContext
+                .Jobs.Include(j => j.CompanyDescription)
+                .Include(j => j.SkillsRequired)
+                .FirstOrDefaultAsync(j => j.Id == jobId);
+            if (job == null)
+            {
+                throw new KeyNotFoundException($"Job with id {jobId} not found");
+            }
+
+            var existingApplication = await _dbContext.Applications.FirstOrDefaultAsync(a =>
+                a.SeekerId == seekerId && a.JobsId == jobId
+            );
+            if (existingApplication != null)
+            {
+                throw new ApplicationException("Seeker has already applied for this job.");
+            }
+
+            var application = new Application
+            {
+                SeekerId = seekerId,
+                JobsId = jobId,
+                CompanyId = companyId,
+                Seekers = null,
+                Jobs = null,
+                Company = null,
+                ApplicationDate = new()
+                {
+                    SubmitDate = DateTime.UtcNow,
+                    ReviewDate = DateTime.UtcNow,
+                    DecisionDate = DateTime.UtcNow,
+                    Comments = "Successfully Applied to the new Job",
+                },
+                Status = new Status { StatusName = Rinzo.Core.Entities.Jobs.V1.StatusName.Active },
+            };
+
+            _dbContext.Add(application);
+            await _dbContext.SaveChangesAsync();
+
+            return application;
         }
 
         public Task DeleteAsync(string id)
@@ -140,111 +111,82 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
 
         public async Task<List<ApplicationModel>> GetAllAsync()
         {
-            try
-            {
-                var entities = await _dbContext
-                    .Applications.Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .ThenInclude(p => p.CompanyAddress)
-                    .Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .ThenInclude(p => p.ContactEmail)
-                    .Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .ThenInclude(p => p.ContactPhone)
-                    .Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .ThenInclude(p => p.IndustryTypes)
-                    .Include(j => j.Jobs)
-                    .ThenInclude(j => j.JobAddress)
-                    .Include(j => j.ApplicationDate)
-                    .Include(j => j.Status)
-                    .ToListAsync();
+            var entities = await _dbContext
+                .Applications.Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.CompanyAddress)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.ContactEmail)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.ContactPhone)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.IndustryTypes)
+                .Include(j => j.Jobs)
+                .ThenInclude(j => j.JobAddress)
+                .Include(j => j.ApplicationDate)
+                .Include(j => j.Status)
+                .ToListAsync();
 
-                if (!entities.Any())
-                {
-                    return new List<ApplicationModel>();
-                }
-
-                return entities.Select(ApplicationMapper.ToApplicationModel).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error retrieving applications: " + ex.Message, ex);
-            }
+            return entities.Select(ApplicationMapper.ToApplicationModel).ToList();
         }
 
         public async Task<ApplicationModel> GetByIdAsync(string id)
         {
-            try
+            if (string.IsNullOrEmpty(id))
             {
-                if (string.IsNullOrEmpty(id))
-                {
-                    throw new ArgumentException("Application ID cannot be null or empty.");
-                }
-
-                var application = await _dbContext
-                    .Applications.Include(a => a.Seekers)
-                    .Include(a => a.Jobs)
-                    .Include(a => a.Company)
-                    .Include(a => a.ApplicationDate)
-                    .FirstOrDefaultAsync(a => a.Id == id);
-
-                if (application == null)
-                {
-                    throw new KeyNotFoundException($"Application with ID {id} not found.");
-                }
-
-                return ApplicationMapper.ToApplicationModel(application);
+                throw new ArgumentException("Application ID cannot be null or empty.");
             }
-            catch (Exception ex)
+
+            var application = await _dbContext
+                .Applications.Include(a => a.Seekers)
+                .Include(a => a.Jobs)
+                .Include(a => a.Company)
+                .Include(a => a.ApplicationDate)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (application == null)
             {
-                throw new Exception($"Error retrieving application with ID {id}: {ex.Message}", ex);
+                throw new KeyNotFoundException($"Application with id {id} not found");
             }
+
+            return ApplicationMapper.ToApplicationModel(application);
         }
 
         public async Task<List<ApplicationModel>> GetApplicationBySeekersId(string seekerId)
         {
-            try
+            if (string.IsNullOrEmpty(seekerId))
             {
-                if (string.IsNullOrEmpty(seekerId))
-                {
-                    throw new ArgumentException("Seeker ID cannot be null or empty.");
-                }
-
-                var entities = await _dbContext
-                    .Applications.Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .ThenInclude(p => p.CompanyAddress)
-                    .Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .ThenInclude(p => p.ContactEmail)
-                    .Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .ThenInclude(p => p.ContactPhone)
-                    .Include(p => p.Company)
-                    .ThenInclude(p => p.Profile)
-                    .ThenInclude(p => p.IndustryTypes)
-                    .Include(j => j.Jobs)
-                    .ThenInclude(j => j.JobAddress)
-                    .Include(j => j.ApplicationDate)
-                    .Include(j => j.Status)
-                    .Where(a => a.SeekerId == seekerId)
-                    .ToListAsync();
-
-                return entities.Select(ApplicationMapper.ToApplicationModel).ToList();
+                throw new ArgumentException("Seeker ID cannot be null or empty.");
             }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    $"Error retrieving applications for Seeker ID {seekerId}: {ex.Message}",
-                    ex
-                );
-            }
+
+            var entities = await _dbContext
+                .Applications.Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.CompanyAddress)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.ContactEmail)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.ContactPhone)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.IndustryTypes)
+                .Include(j => j.Jobs)
+                .ThenInclude(j => j.JobAddress)
+                .Include(j => j.ApplicationDate)
+                .Include(j => j.Status)
+                .Where(a => a.SeekerId == seekerId)
+                .ToListAsync();
+
+            return entities.Select(ApplicationMapper.ToApplicationModel).ToList();
         }
 
         public Task<Application> UpdateApplicationStatusAsync(string applicationId, Status status)

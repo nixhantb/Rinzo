@@ -31,7 +31,7 @@ namespace Rinzo.Infrastructure.Mappers.V1
             {
                 Id = model.Id,
                 EmailAddress = model.EmailAddress,
-                EmailType = (Rinzo.Core.Models.Common.V1.EmailCategory)model.EmailType,
+                EmailType = model.EmailType,
             };
         }
     }

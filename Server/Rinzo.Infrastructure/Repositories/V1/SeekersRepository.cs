@@ -1,4 +1,3 @@
-using System.Data.Common;
 using System.Security.Claims;
 using Rinzo.Core.Models.Seekers.V1;
 using Rinzo.Core.Entities.Seekers.V1;
@@ -35,73 +34,61 @@ namespace Rinzo.Infrastructure.Repositories.Seekers.V1
 
         public async Task<SeekerModel> AddAsync(Seeker entity)
         {
+            // Get the logged-in user's ID from the claims
+            var userId = _httpContextAccessor
+                .HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)
+                ?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UnauthorizedAccessException("Unable to retrieve the logged-in user ID.");
+            }
+
+            var user = await _authContext.Users.FirstOrDefaultAsync(e => e.Id == userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found in the identity database.");
+            }
+
+            var seekersEntity = SeekersMapper.ToSeekerDataBase(entity, userId);
+
             try
             {
-                // Get the logged-in user's ID from the claims
-                var userId = _httpContextAccessor
-                    .HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)
-                    ?.Value;
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    throw new Exception("Unable to retrieve the logged-in user ID.");
-                }
-
-                var user = await _authContext.Users.FirstOrDefaultAsync(e => e.Id == userId);
-                if (user == null)
-                {
-                    throw new Exception("User not found in the identity database.");
-                }
-
-                var seekersEntity = SeekersMapper.ToSeekerDataBase(entity, userId);
-
                 await _dbContext.AddAsync(seekersEntity);
                 await _dbContext.SaveChangesAsync();
-
-                var seekersResponse = SeekersMapper.ToSeekerModel(seekersEntity);
-                return seekersResponse;
             }
             catch (DbUpdateException dbEx)
                 when (dbEx.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
             {
-                throw new Exception("Seeker already exists with the same ID.", dbEx);
+                throw new ApplicationException("Seeker already exists with the same ID.", dbEx);
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error occurred while adding seeker: {ex.Message}");
-            }
+
+            return SeekersMapper.ToSeekerModel(seekersEntity);
         }
 
         public async Task<SeekerModel> GetByIdAsync(string id)
         {
-            try
-            {
-                var seeker = await _dbContext
-                    .Seekers.Include(p => p.PersonName)
-                    .Include(c => c.Phone)
-                    .Include(c => c.Address)
-                    .Include(c => c.Skills)
-                    .Include(c => c.Education)
-                    .Include(c => c.Qualifications)
-                    .Include(c => c.Experience)
-                    .ThenInclude(e => e.Company)
-                    .Include(p => p.Projects)
-                    .Include(s => s.SocialMedias)
-                    .FirstOrDefaultAsync(j => j.Id == id);
+            var seeker = await _dbContext
+                .Seekers.Include(p => p.PersonName)
+                .Include(c => c.Phone)
+                .Include(c => c.Address)
+                .Include(c => c.Skills)
+                .Include(c => c.Education)
+                .Include(c => c.Qualifications)
+                .Include(c => c.Experience)
+                .ThenInclude(e => e.Company)
+                .Include(p => p.Projects)
+                .Include(s => s.SocialMedias)
+                .FirstOrDefaultAsync(j => j.Id == id);
 
-                var seekerModel = SeekersMapper.ToSeekerModel(seeker);
-                return seekerModel;
-            }
-            catch (Exception ex) when (ex is DbUpdateException || ex is DbException)
+            if (seeker == null)
             {
-                throw new Exception(
-                    "The Seekers with the requested ID doesn't exist or a database exception occurred.",
-                    ex
-                );
+                throw new KeyNotFoundException($"Seeker with id {id} not found");
             }
+
+            return SeekersMapper.ToSeekerModel(seeker);
         }
 
-        //b4dc5b8a-a78b-4a8c-8308-20c7e5ad73a4
         public async Task DeleteAsync(string id)
         {
             throw new NotImplementedException();

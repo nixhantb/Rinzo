@@ -20,25 +20,16 @@ namespace Rinzo.Infrastructure.Repositories.Employers.V1
         #endregion
         public async Task<EmployerModel> AddAsync(Employer entity)
         {
-            try
+            if (entity == null)
             {
-                if (entity == null)
-                {
-                    throw new ArgumentNullException(nameof(entity));
-                }
-
-                var saveToDb = EmployerMapper.ToEmployer(entity);
-                await _dbContext.Employers.AddAsync(saveToDb);
-                await _dbContext.SaveChangesAsync();
-
-                var apiResponse = EmployerMapper.ToEmployerModel(saveToDb);
-
-                return apiResponse;
+                throw new ArgumentNullException(nameof(entity));
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error adding employers ", ex);
-            }
+
+            var saveToDb = EmployerMapper.ToEmployer(entity);
+            await _dbContext.Employers.AddAsync(saveToDb);
+            await _dbContext.SaveChangesAsync();
+
+            return EmployerMapper.ToEmployerModel(saveToDb);
         }
 
         public Task DeleteAsync(string id)
@@ -48,15 +39,8 @@ namespace Rinzo.Infrastructure.Repositories.Employers.V1
 
         public async Task<List<EmployerModel>> GetAllAsync()
         {
-            try
-            {
-                var employers = await _dbContext.Employers.ToListAsync();
-                return employers.Select(EmployerMapper.ToEmployerModel).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error Retriving Employers", ex);
-            }
+            var employers = await _dbContext.Employers.ToListAsync();
+            return employers.Select(EmployerMapper.ToEmployerModel).ToList();
         }
 
         public Task<EmployerModel> GetByIdAsync(string id)

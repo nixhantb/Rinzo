@@ -52,11 +52,7 @@ namespace Rinzo.Infrastructure.Mappers.V1
                 Phone = PhoneMapper.ToPhoneModel(model.Phone),
                 Company = CompanyMapper.ToCompanyModel(model.Company),
 
-                EmployerType = new()
-                {
-                    EmployerCategory = (Rinzo.Core.Models.Employers.V1.EmployerCategory)
-                        model.EmployerType.EmployerCategory,
-                },
+                EmployerType = new() { EmployerCategory = model.EmployerType.EmployerCategory },
             };
         }
     }

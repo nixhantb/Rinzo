@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Rinzo.Core.Models.Common.V1;
+﻿using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 using Rinzo.Infrastructure.Data.Contexts;
@@ -34,24 +33,14 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
         /// <remarks>This method fetches the Phones from the database using Entity Framework Core.</remarks>
         public async Task<List<PhoneModel>> GetAllAsync()
         {
-            try
-            {
-                var result = await _dbContext
-                    .Phones.Select(e => new PhoneModel
-                    {
-                        Id = e.Id,
-                        CountryCode = e.CountryCode,
-                        PhoneNumber = e.PhoneNumber,
-                    })
-                    .ToListAsync();
-                return result;
-            }
-            catch (Exception ex) when (ex is DbUpdateException || ex is DbException)
-            {
-                throw new Exception(
-                    "Error while fetching data from the database. Please try again later."
-                );
-            }
+            return await _dbContext
+                .Phones.Select(e => new PhoneModel
+                {
+                    Id = e.Id,
+                    CountryCode = e.CountryCode,
+                    PhoneNumber = e.PhoneNumber,
+                })
+                .ToListAsync();
         }
         #endregion
         #region Retrieve Phone ID Asynchronously
@@ -60,27 +49,16 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
         /// <remarks>This method fetches the Phone from the database using Entity Framework Core.</remarks>
         public async Task<PhoneModel> GetByIdAsync(string id)
         {
-            try
-            {
-                var phone = await _dbContext
-                    .Phones.Where(e => e.Id == id)
-                    .Select(e => new PhoneModel
-                    {
-                        Id = e.Id,
-                        CountryCode = e.CountryCode,
-                        PhoneNumber = e.PhoneNumber,
-                    })
-                    .FirstOrDefaultAsync();
-                return phone == null
-                    ? throw new KeyNotFoundException($"Phone with id {id} not found")
-                    : phone;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    $"An Error occured while fetching a phone with id: {id}: {ex.Message}"
-                );
-            }
+            var phone = await _dbContext
+                .Phones.Where(e => e.Id == id)
+                .Select(e => new PhoneModel
+                {
+                    Id = e.Id,
+                    CountryCode = e.CountryCode,
+                    PhoneNumber = e.PhoneNumber,
+                })
+                .FirstOrDefaultAsync();
+            return phone ?? throw new KeyNotFoundException($"Phone with id {id} not found");
         }
         #endregion
         public Task UpdateAsync(Phone entity)

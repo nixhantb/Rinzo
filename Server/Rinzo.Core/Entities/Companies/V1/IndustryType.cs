@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Rinzo.Core.Entities.Companies.V1
 {
-    public class IndustryType
-    {
-        public IndustryCategory IndustryCategory { get; set; }
-    }
-
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum IndustryCategory
     {

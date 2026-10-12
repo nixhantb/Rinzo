@@ -20,19 +20,8 @@ namespace Rinzo.WebApi.Controllers.Job.V1
         [HttpGet("seekers/{seekerId}")]
         public async Task<IActionResult> GetBySeekersIdAsync([FromRoute] string seekerId)
         {
-            try
-            {
-                var applicationBySeekersId = await _service.GetApplicationBySeekersId(seekerId);
-
-                return Ok(applicationBySeekersId);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(
-                    500,
-                    new { Error = "Internal Server Error", Message = ex.Message }
-                );
-            }
+            var applicationBySeekersId = await _service.GetApplicationBySeekersId(seekerId);
+            return Ok(applicationBySeekersId);
         }
 
         [HttpPost("apply")]
@@ -42,19 +31,8 @@ namespace Rinzo.WebApi.Controllers.Job.V1
             [FromQuery] string companyId
         )
         {
-            try
-            {
-                var application = await _service.ApplyForJobAsync(seekerId, jobId, companyId);
-
-                return Ok(application);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(
-                    500,
-                    new { Error = "Internal Server Error", Message = ex.Message }
-                );
-            }
+            var application = await _service.ApplyForJobAsync(seekerId, jobId, companyId);
+            return Ok(application);
         }
     }
 }

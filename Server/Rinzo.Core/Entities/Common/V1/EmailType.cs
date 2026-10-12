@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Rinzo.Core.Entities.Common.V1
 {
-    public class EmailType
-    {
-        public EmailCategory EmailCategory { get; set; }
-    }
-
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum EmailCategory
     {

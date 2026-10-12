@@ -27,26 +27,14 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
 
         public async Task<List<QualificationModel>> GetAllAsync()
         {
-            try
-            {
-                var result = await _dbContext
-                    .Qualifications.Select(e => new QualificationModel
-                    {
-                        Id = e.Id,
-                        QualificationType = (Rinzo.Core.Models.Common.V1.QualificationCategory)
-                            e.QualificationType,
-                        QualificationInformation = e.QualificationInformation,
-                    })
-                    .ToListAsync();
-
-                return result;
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new Exception(
-                    "Error while fetching the database. Please try again later" + ex.Message
-                );
-            }
+            return await _dbContext
+                .Qualifications.Select(e => new QualificationModel
+                {
+                    Id = e.Id,
+                    QualificationType = e.QualificationType,
+                    QualificationInformation = e.QualificationInformation,
+                })
+                .ToListAsync();
         }
 
         public Task<QualificationModel> GetByIdAsync(string id)

@@ -24,24 +24,14 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
         /// <remarks>This method fetches Skill Model from the database using Entity Framework Core.</remarks>
         public async Task<List<SkillModel>> GetAllAsync()
         {
-            try
-            {
-                var result = await _dbContext
-                    .Skills.Select(e => new SkillModel
-                    {
-                        Id = e.Id,
-                        Title = e.Title,
-                        Description = e.Description,
-                    })
-                    .ToListAsync();
-                return result;
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new Exception(
-                    "Error while updating the database. Please try again later." + ex.Message
-                );
-            }
+            return await _dbContext
+                .Skills.Select(e => new SkillModel
+                {
+                    Id = e.Id,
+                    Title = e.Title,
+                    Description = e.Description,
+                })
+                .ToListAsync();
         }
         #endregion
 

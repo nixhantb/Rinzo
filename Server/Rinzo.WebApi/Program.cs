@@ -1,11 +1,6 @@
 using System.Text;
 using FluentValidation;
-using Rinzo.Infrastructure.Caching;
-using Rinzo.WebApi.Exceptions.CustomExceptionWrappers.V1;
-using Rinzo.WebApi.Logging;
 using Rinzo.WebApi.Middlewares.Exceptions;
-using Rinzo.WebApi.Middlewares.TotalXCount;
-using Rinzo.WebApi.Security.Headers;
 using Rinzo.Core.Validators;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Entities.Companies.V1;
@@ -49,13 +44,12 @@ builder.Services.AddScoped<IEmaiTypeRepository, EmailTypeRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IValidator<Email>, EmailValidator>();
 
-builder.Services.AddSingleton<ILoggerManagerV1, LoggerManagerV1>();
-
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IValidator<Skill>, SkillValidator>();
 
 builder.Services.AddScoped<IPersonNameRepository, PersonNameRepository>();
+builder.Services.AddScoped<IPersonNameService, PersonNameService>();
 builder.Services.AddScoped<IValidator<PersonName>, PersonNameValidator>();
 
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
@@ -111,11 +105,8 @@ builder
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMemoryCache(); // Register IMemoryCache
 builder.Services.AddHttpContextAccessor();
 
-// Register BaseCacheHelper<T> for caching
-builder.Services.AddScoped(typeof(BaseCacheHelper<>));
 var key = Environment.GetEnvironmentVariable("JWT_KEY");
 
 if (string.IsNullOrEmpty(key))
@@ -206,19 +197,22 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseStatusCodePages(async context =>
+{
+    context.HttpContext.Response.ContentType = "application/json";
+    await context.HttpContext.Response.WriteAsync(
+        $"{{\"message\":\"No resource found matching '{context.HttpContext.Request.Path}'.\"}}"
+    );
+});
+
 #region Middleware Configurations
 app.UseHsts();
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-// app.UseMiddleware<SecurityHeaders>();
-// app.UseMiddleware<TotalResponseHeaderCount>();
-app.UseMiddleware<ResourceNotFoundException>();
 
 #endregion
 app.CreateDataBaseTableIfNotPresent();

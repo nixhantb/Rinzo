@@ -1,5 +1,4 @@
-using System.Text.Json.Serialization;
-using Rinzo.Core.Models.Common.V1;
+using Rinzo.Core.Entities.Companies.V1;
 
 namespace Rinzo.Core.Models.Companies.V1
 {
