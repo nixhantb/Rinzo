@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Companies.V1;
 using Rinzo.Core.Entities.Companies.V1;
 using Rinzo.Core.Interfaces.Companies.V1;
 using Rinzo.Infrastructure.Data.Contexts;
@@ -8,17 +7,14 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
 {
     public class IndustryTypeRepository : IIndustryTypeRepository
     {
-        #region Initialization
         private readonly BaseDBContext _dbContext;
-
-        #endregion
 
         public IndustryTypeRepository(BaseDBContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public Task<IndustryModel> AddAsync(Industry entity)
+        public Task<Industry> AddAsync(Industry entity)
         {
             throw new NotImplementedException();
         }
@@ -28,18 +24,12 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
             throw new NotImplementedException();
         }
 
-        public async Task<List<IndustryModel>> GetAllAsync()
+        public async Task<List<Industry>> GetAllAsync()
         {
-            return await _dbContext
-                .IndustryTypes.Select(e => new IndustryModel
-                {
-                    Id = e.Id,
-                    IndustryType = e.IndustryType,
-                })
-                .ToListAsync();
+            return await _dbContext.IndustryTypes.ToListAsync();
         }
 
-        public Task<IndustryModel> GetByIdAsync(string id)
+        public Task<Industry> GetByIdAsync(string id)
         {
             throw new NotImplementedException();
         }

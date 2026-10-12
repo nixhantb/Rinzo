@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 
@@ -15,38 +14,19 @@ namespace Rinzo.Core.Services
                 ?? throw new ArgumentNullException(nameof(personNameRepository));
         }
 
-        public async Task<PersonNameModel> AddAsync(PersonName entity)
+        public Task<PersonName> AddAsync(PersonName entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-            var result = await _personNameRepository.AddAsync(entity);
-            return result;
+            return _personNameRepository.AddAsync(entity);
         }
 
-        public async Task DeleteAsync(string id)
-        {
-            await _personNameRepository.DeleteAsync(id);
-        }
+        public Task DeleteAsync(string id) => _personNameRepository.DeleteAsync(id);
 
-        public async Task<List<PersonNameModel>> GetAllAsync()
-        {
-            var person = await _personNameRepository.GetAllAsync();
-            return person;
-        }
+        public Task<List<PersonName>> GetAllAsync() => _personNameRepository.GetAllAsync();
 
-        public async Task<PersonNameModel> GetByIdAsync(string id)
-        {
-            var job = await _personNameRepository.GetByIdAsync(id);
-            if (job == null)
-            {
-                throw new Exception($"Person with ID {id} not found.");
-            }
-            return job;
-        }
+        public Task<PersonName> GetByIdAsync(string id) => _personNameRepository.GetByIdAsync(id);
 
-        public async Task UpdateAsync(PersonName entity)
-        {
-            await _personNameRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(PersonName entity) => _personNameRepository.UpdateAsync(entity);
     }
 }

@@ -1,36 +1,30 @@
-using Rinzo.Core.Models.Companies.V1;
 using Rinzo.Core.Entities.Companies.V1;
 using Rinzo.Core.Interfaces.Companies.V1;
 using Rinzo.Infrastructure.Data.Contexts;
-using Rinzo.Infrastructure.Mappers.V1;
 using Microsoft.EntityFrameworkCore;
 
 namespace Rinzo.Infrastructure.Repositories.Companies.V1
 {
     public class CompanyRepository : ICompanyRepository
     {
-        #region Initialization
         private readonly BaseDBContext _dbContext;
-
-        #endregion
 
         public CompanyRepository(BaseDBContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<CompanyModel> AddAsync(Company entity)
+        public async Task<Company> AddAsync(Company entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            var saveToDb = CompanyMapper.ToCompanyDataBase(entity);
-            await _dbContext.Companies.AddAsync(saveToDb);
+            await _dbContext.Companies.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
 
-            return CompanyMapper.ToCompanyModel(saveToDb);
+            return entity;
         }
 
         public Task DeleteAsync(string id)
@@ -38,9 +32,9 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
             throw new NotImplementedException();
         }
 
-        public async Task<List<CompanyModel>> GetAllAsync()
+        public async Task<List<Company>> GetAllAsync()
         {
-            var companies = await _dbContext
+            return await _dbContext
                 .Companies.Include(c => c.Profile)
                 .ThenInclude(p => p.ContactEmail)
                 .Include(c => c.Profile)
@@ -50,14 +44,12 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
                 .Include(c => c.Profile)
                 .ThenInclude(p => p.IndustryTypes)
                 .ToListAsync();
-
-            return companies.Select(CompanyMapper.ToCompanyModel).ToList();
         }
 
-        public async Task<CompanyModel> GetByIdAsync(string id)
+        public async Task<Company> GetByIdAsync(string id)
         {
             var company = await _dbContext
-                .Companies.Where(c => c.Id.Equals(id))
+                .Companies.Where(c => c.Id == id)
                 .Include(c => c.Profile)
                 .ThenInclude(p => p.ContactEmail)
                 .Include(c => c.Profile)
@@ -68,12 +60,7 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
                 .ThenInclude(p => p.IndustryTypes)
                 .FirstOrDefaultAsync();
 
-            if (company == null)
-            {
-                throw new KeyNotFoundException($"Company with id {id} not found");
-            }
-
-            return CompanyMapper.ToCompanyModel(company);
+            return company ?? throw new KeyNotFoundException($"Company with id {id} not found");
         }
 
         public Task UpdateAsync(Company entity)

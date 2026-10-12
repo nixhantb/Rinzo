@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 
@@ -14,38 +13,19 @@ namespace Rinzo.Core.Services
                 phoneRepository ?? throw new ArgumentNullException(nameof(phoneRepository));
         }
 
-        public async Task<PhoneModel> AddAsync(Phone entity)
+        public Task<Phone> AddAsync(Phone entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-            var result = await _phoneRepository.AddAsync(entity);
-            return result;
+            return _phoneRepository.AddAsync(entity);
         }
 
-        public async Task DeleteAsync(string id)
-        {
-            await _phoneRepository.DeleteAsync(id);
-        }
+        public Task DeleteAsync(string id) => _phoneRepository.DeleteAsync(id);
 
-        public async Task<List<PhoneModel>> GetAllAsync()
-        {
-            var phone = await _phoneRepository.GetAllAsync();
-            return phone;
-        }
+        public Task<List<Phone>> GetAllAsync() => _phoneRepository.GetAllAsync();
 
-        public async Task<PhoneModel> GetByIdAsync(string id)
-        {
-            var phone = await _phoneRepository.GetByIdAsync(id);
-            if (phone == null)
-            {
-                throw new Exception($"phone with ID {id} not found.");
-            }
-            return phone;
-        }
+        public Task<Phone> GetByIdAsync(string id) => _phoneRepository.GetByIdAsync(id);
 
-        public async Task UpdateAsync(Phone entity)
-        {
-            await _phoneRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Phone entity) => _phoneRepository.UpdateAsync(entity);
     }
 }

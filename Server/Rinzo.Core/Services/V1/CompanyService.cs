@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Companies.V1;
 using Rinzo.Core.Entities.Companies.V1;
 using Rinzo.Core.Interfaces.Companies.V1;
 
@@ -14,43 +13,19 @@ namespace Rinzo.Core.Services
                 companyRepository ?? throw new ArgumentNullException(nameof(companyRepository));
         }
 
-        public async Task<CompanyModel> AddAsync(Company entity)
+        public Task<Company> AddAsync(Company entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-
-            return await _companyRepository.AddAsync(entity);
+            return _companyRepository.AddAsync(entity);
         }
 
-        public async Task DeleteAsync(string id)
-        {
-            var company = await _companyRepository.GetByIdAsync(id);
-            if (company == null)
-                throw new Exception($"Application with ID {id} not found.");
+        public Task DeleteAsync(string id) => _companyRepository.DeleteAsync(id);
 
-            await _companyRepository.DeleteAsync(id);
-        }
+        public Task<List<Company>> GetAllAsync() => _companyRepository.GetAllAsync();
 
-        public async Task<List<CompanyModel>> GetAllAsync()
-        {
-            return await _companyRepository.GetAllAsync();
-        }
+        public Task<Company> GetByIdAsync(string id) => _companyRepository.GetByIdAsync(id);
 
-        public async Task<CompanyModel> GetByIdAsync(string id)
-        {
-            var company = await _companyRepository.GetByIdAsync(id);
-            if (company == null)
-                throw new Exception($"Company with ID {id} not found.");
-
-            return company;
-        }
-
-        public async Task UpdateAsync(Company entity)
-        {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-
-            await _companyRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Company entity) => _companyRepository.UpdateAsync(entity);
     }
 }

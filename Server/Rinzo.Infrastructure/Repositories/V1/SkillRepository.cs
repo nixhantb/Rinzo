@@ -1,4 +1,3 @@
-﻿using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 using Rinzo.Infrastructure.Data.Contexts;
@@ -8,43 +7,24 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
 {
     public class SkillRepository : ISkillRepository
     {
-        #region Initialization
-        // <returns>The list of initializations</returns>
         private readonly BaseDBContext _dbContext;
 
         public SkillRepository(BaseDBContext dbContext)
         {
             _dbContext = dbContext;
         }
-        #endregion
 
-        #region Retrieve SkillModel Asynchronously
-        /// <returns>The list of skill-models by Id.</returns>
-        /// <exception cref="Exception">Thrown when there is an error while fetching data from the database.</exception>
-        /// <remarks>This method fetches Skill Model from the database using Entity Framework Core.</remarks>
-        public async Task<List<SkillModel>> GetAllAsync()
+        public async Task<List<Skill>> GetAllAsync()
         {
-            return await _dbContext
-                .Skills.Select(e => new SkillModel
-                {
-                    Id = e.Id,
-                    Title = e.Title,
-                    Description = e.Description,
-                })
-                .ToListAsync();
+            return await _dbContext.Skills.ToListAsync();
         }
-        #endregion
 
-        #region Retrieve skill-models Asynchronously By ID
-        /// <returns>The list of email-types by Id.</returns>
-        /// <exception cref="Exception">Thrown when there is an error while fetching data from the database.</exception>
-        /// <remarks>This method fetches all skill-models by Id from the database using Entity Framework Core.</remarks>
-        public Task<SkillModel> GetByIdAsync(string id)
+        public Task<Skill> GetByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
-        #endregion
-        public Task<SkillModel> AddAsync(Skill entity)
+
+        public Task<Skill> AddAsync(Skill entity)
         {
             throw new NotImplementedException();
         }

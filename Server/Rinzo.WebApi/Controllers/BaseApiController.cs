@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Rinzo.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,10 +6,9 @@ namespace Rinzo.WebApi.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public abstract class BaseApiController<TEntity, TModel, TService> : ControllerBase
+    public abstract class BaseApiController<TEntity, TService> : ControllerBase
         where TEntity : class
-        where TModel : class
-        where TService : IService<TEntity, TModel>
+        where TService : IService<TEntity>
     {
         protected readonly TService _service;
         protected readonly IValidator<TEntity> _validator;
@@ -22,7 +21,6 @@ namespace Rinzo.WebApi.Controllers
 
         #region Retrieve record GET request
         /// <returns>The list of records.</returns>
-        /// <exception cref="Exception">Thrown when there is an error while fetching data from the database.</exception>
         /// <remarks>This method fetches all the records from the database using Entity Framework Core.</remarks>
         [HttpGet]
         public virtual async Task<IActionResult> GetAllAsync()
@@ -34,7 +32,6 @@ namespace Rinzo.WebApi.Controllers
 
         #region Retrieve record GET By ID request
         /// <returns>The record by ID.</returns>
-        /// <exception cref="Exception">Thrown when there is an error while fetching data from the database.</exception>
         /// <remarks>This method fetches the record by ID from the database using Entity Framework Core.</remarks>
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> GetByIdAsync(string id)
@@ -50,7 +47,6 @@ namespace Rinzo.WebApi.Controllers
 
         #region POST Request
         /// <returns>The newly created record.</returns>
-        /// <exception cref="Exception">Thrown when there is an error while fetching data from the database.</exception>
         /// <remarks>This method posts the record to the database using Entity Framework Core.</remarks>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]

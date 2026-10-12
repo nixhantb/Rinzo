@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 
@@ -14,36 +13,14 @@ namespace Rinzo.Core.Services
                 educationRepository ?? throw new ArgumentNullException(nameof(educationRepository));
         }
 
-        public async Task<EducationModel> AddAsync(Education entity)
-        {
-            var education = await _educationRepository.AddAsync(entity);
-            return education;
-        }
+        public Task<Education> AddAsync(Education entity) => _educationRepository.AddAsync(entity);
 
-        public async Task DeleteAsync(string id)
-        {
-            await _educationRepository.DeleteAsync(id);
-        }
+        public Task DeleteAsync(string id) => _educationRepository.DeleteAsync(id);
 
-        public async Task<List<EducationModel>> GetAllAsync()
-        {
-            var education = await _educationRepository.GetAllAsync();
-            return education;
-        }
+        public Task<List<Education>> GetAllAsync() => _educationRepository.GetAllAsync();
 
-        public async Task<EducationModel> GetByIdAsync(string id)
-        {
-            var education = await _educationRepository.GetByIdAsync(id);
-            if (education == null)
-            {
-                throw new Exception($"Job with ID {id} not found.");
-            }
-            return education;
-        }
+        public Task<Education> GetByIdAsync(string id) => _educationRepository.GetByIdAsync(id);
 
-        public async Task UpdateAsync(Education entity)
-        {
-            await _educationRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Education entity) => _educationRepository.UpdateAsync(entity);
     }
 }

@@ -1,18 +1,16 @@
 namespace Rinzo.Core.Interfaces
 {
     /// <summary>
-    /// Generic service interface for basic CRUD operations and business logic with separate entity and model types.
+    /// Generic service interface for basic CRUD operations and business logic.
     /// </summary>
-    /// <typeparam name="TEntity">The entity class representation.</typeparam>
-    /// <typeparam name="TModel">The model class representation.</typeparam>
-    public interface IService<TEntity, TModel>
-        where TEntity : class
-        where TModel : class
+    /// <typeparam name="T">The entity class representation.</typeparam>
+    public interface IService<T>
+        where T : class
     {
-        Task<TModel> GetByIdAsync(string id);
-        Task<List<TModel>> GetAllAsync();
-        Task<TModel> AddAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity);
+        Task<T> GetByIdAsync(string id);
+        Task<List<T>> GetAllAsync();
+        Task<T> AddAsync(T entity);
+        Task UpdateAsync(T entity);
         Task DeleteAsync(string id);
     }
 }

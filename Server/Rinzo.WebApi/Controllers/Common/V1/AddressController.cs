@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Rinzo.Core.Models.Common.V1;
+using FluentValidation;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Rinzo.WebApi.Controllers.Common.V1
 {
     [Route("api/v1/addresses")]
-    public class AddressController : BaseApiController<Address, AddressModel, IAddressService>
+    public class AddressController : BaseApiController<Address, IAddressService>
     {
         public AddressController(IAddressService addressRepository, IValidator<Address> validator)
             : base(addressRepository, validator) { }

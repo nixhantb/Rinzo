@@ -1,5 +1,4 @@
 using FluentValidation;
-using Rinzo.Core.Models.Jobs.V1;
 using Rinzo.Core.Entities.Jobs.V1;
 using Rinzo.Core.Interfaces.Jobs.V1;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +9,7 @@ namespace Rinzo.WebApi.Controllers.Job.V1
     // [Authorize]
     [Route("api/v1/jobs")]
     [ApiController]
-    public class JobController : BaseApiController<JobEntity, JobModel, IJobService>
+    public class JobController : BaseApiController<JobEntity, IJobService>
     {
         public JobController(IJobService jobService, IValidator<JobEntity> validator)
             : base(jobService, validator) { }

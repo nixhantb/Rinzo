@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 
@@ -14,38 +13,19 @@ namespace Rinzo.Core.Services
                 skillRepository ?? throw new ArgumentNullException(nameof(skillRepository));
         }
 
-        public async Task<SkillModel> AddAsync(Skill entity)
+        public Task<Skill> AddAsync(Skill entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-            var result = await _skillRepository.AddAsync(entity);
-            return result;
+            return _skillRepository.AddAsync(entity);
         }
 
-        public async Task DeleteAsync(string id)
-        {
-            await _skillRepository.DeleteAsync(id);
-        }
+        public Task DeleteAsync(string id) => _skillRepository.DeleteAsync(id);
 
-        public async Task<List<SkillModel>> GetAllAsync()
-        {
-            var skills = await _skillRepository.GetAllAsync();
-            return skills;
-        }
+        public Task<List<Skill>> GetAllAsync() => _skillRepository.GetAllAsync();
 
-        public async Task<SkillModel> GetByIdAsync(string id)
-        {
-            var skill = await _skillRepository.GetByIdAsync(id);
-            if (skill == null)
-            {
-                throw new Exception($"Skill with ID {id} not found.");
-            }
-            return skill;
-        }
+        public Task<Skill> GetByIdAsync(string id) => _skillRepository.GetByIdAsync(id);
 
-        public async Task UpdateAsync(Skill entity)
-        {
-            await _skillRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Skill entity) => _skillRepository.UpdateAsync(entity);
     }
 }

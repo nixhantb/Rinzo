@@ -1,10 +1,8 @@
 using System.Security.Claims;
-using Rinzo.Core.Models.Seekers.V1;
 using Rinzo.Core.Entities.Seekers.V1;
 using Rinzo.Core.Interfaces.Seekers.V1;
 using Rinzo.Infrastructure.Data.Contexts;
 using Rinzo.Infrastructure.Data.Contexts.V1.Identity;
-using Rinzo.Infrastructure.Mappers.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -13,12 +11,9 @@ namespace Rinzo.Infrastructure.Repositories.Seekers.V1
 {
     public class SeekersRepository : ISeekerRepository
     {
-        #region Initialization
         private readonly BaseDBContext _dbContext;
         private readonly ApplicationDbContext _authContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        #endregion
 
         public SeekersRepository(
             BaseDBContext dbContext,
@@ -32,7 +27,7 @@ namespace Rinzo.Infrastructure.Repositories.Seekers.V1
                 httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
-        public async Task<SeekerModel> AddAsync(Seeker entity)
+        public async Task<Seeker> AddAsync(Seeker entity)
         {
             // Get the logged-in user's ID from the claims
             var userId = _httpContextAccessor
@@ -50,11 +45,12 @@ namespace Rinzo.Infrastructure.Repositories.Seekers.V1
                 throw new KeyNotFoundException("User not found in the identity database.");
             }
 
-            var seekersEntity = SeekersMapper.ToSeekerDataBase(entity, userId);
+            // The seeker's id is the identity user's id (shared primary key).
+            entity.Id = userId;
 
             try
             {
-                await _dbContext.AddAsync(seekersEntity);
+                await _dbContext.AddAsync(entity);
                 await _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateException dbEx)
@@ -63,10 +59,10 @@ namespace Rinzo.Infrastructure.Repositories.Seekers.V1
                 throw new ApplicationException("Seeker already exists with the same ID.", dbEx);
             }
 
-            return SeekersMapper.ToSeekerModel(seekersEntity);
+            return entity;
         }
 
-        public async Task<SeekerModel> GetByIdAsync(string id)
+        public async Task<Seeker> GetByIdAsync(string id)
         {
             var seeker = await _dbContext
                 .Seekers.Include(p => p.PersonName)
@@ -81,25 +77,20 @@ namespace Rinzo.Infrastructure.Repositories.Seekers.V1
                 .Include(s => s.SocialMedias)
                 .FirstOrDefaultAsync(j => j.Id == id);
 
-            if (seeker == null)
-            {
-                throw new KeyNotFoundException($"Seeker with id {id} not found");
-            }
-
-            return SeekersMapper.ToSeekerModel(seeker);
+            return seeker ?? throw new KeyNotFoundException($"Seeker with id {id} not found");
         }
 
-        public async Task DeleteAsync(string id)
+        public Task DeleteAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<SeekerModel>> GetAllAsync()
+        public Task<List<Seeker>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public async Task UpdateAsync(Seeker entity)
+        public Task UpdateAsync(Seeker entity)
         {
             throw new NotImplementedException();
         }

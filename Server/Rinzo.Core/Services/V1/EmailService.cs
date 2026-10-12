@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 
@@ -14,36 +13,14 @@ namespace Rinzo.Core.Services
                 emaiTypeRepository ?? throw new ArgumentNullException(nameof(emaiTypeRepository));
         }
 
-        public async Task<EmailModel> AddAsync(Email entity)
-        {
-            var email = await _emailTypeRepository.AddAsync(entity);
-            return email;
-        }
+        public Task<Email> AddAsync(Email entity) => _emailTypeRepository.AddAsync(entity);
 
-        public Task DeleteAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
+        public Task DeleteAsync(string id) => _emailTypeRepository.DeleteAsync(id);
 
-        public async Task<List<EmailModel>> GetAllAsync()
-        {
-            var email = await _emailTypeRepository.GetAllAsync();
-            return email;
-        }
+        public Task<List<Email>> GetAllAsync() => _emailTypeRepository.GetAllAsync();
 
-        public async Task<EmailModel> GetByIdAsync(string id)
-        {
-            var email = await _emailTypeRepository.GetByIdAsync(id);
-            if (email == null)
-            {
-                throw new Exception($"Job with ID {id} not found.");
-            }
-            return email;
-        }
+        public Task<Email> GetByIdAsync(string id) => _emailTypeRepository.GetByIdAsync(id);
 
-        public async Task UpdateAsync(Email entity)
-        {
-            await _emailTypeRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Email entity) => _emailTypeRepository.UpdateAsync(entity);
     }
 }

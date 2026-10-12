@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Companies.V1;
 using Rinzo.Core.Entities.Companies.V1;
 using Rinzo.Core.Interfaces.Companies.V1;
 
@@ -15,36 +14,14 @@ namespace Rinzo.Core.Services
                 ?? throw new ArgumentNullException(nameof(industryTypeRepository));
         }
 
-        public async Task<IndustryModel> AddAsync(Industry entity)
-        {
-            var industry = await _industryTypeRepository.AddAsync(entity);
-            return industry;
-        }
+        public Task<Industry> AddAsync(Industry entity) => _industryTypeRepository.AddAsync(entity);
 
-        public Task DeleteAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
+        public Task DeleteAsync(string id) => _industryTypeRepository.DeleteAsync(id);
 
-        public async Task<List<IndustryModel>> GetAllAsync()
-        {
-            var industry = await _industryTypeRepository.GetAllAsync();
-            return industry;
-        }
+        public Task<List<Industry>> GetAllAsync() => _industryTypeRepository.GetAllAsync();
 
-        public async Task<IndustryModel> GetByIdAsync(string id)
-        {
-            var industry = await _industryTypeRepository.GetByIdAsync(id);
-            if (industry == null)
-            {
-                throw new Exception($"Job with ID {id} not found.");
-            }
-            return industry;
-        }
+        public Task<Industry> GetByIdAsync(string id) => _industryTypeRepository.GetByIdAsync(id);
 
-        public async Task UpdateAsync(Industry entity)
-        {
-            await _industryTypeRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Industry entity) => _industryTypeRepository.UpdateAsync(entity);
     }
 }

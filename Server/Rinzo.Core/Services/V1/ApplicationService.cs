@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Jobs.V1;
 using Rinzo.Core.Entities.Jobs.V1;
 using Rinzo.Core.Interfaces.Jobs.V1;
 
@@ -15,80 +14,37 @@ namespace Rinzo.Core.Services
                 ?? throw new ArgumentNullException(nameof(applicationRepository));
         }
 
-        public async Task<ApplicationModel> AddAsync(Application entity)
+        public Task<Application> AddAsync(Application entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-
-            return await _applicationRepository.AddAsync(entity);
+            return _applicationRepository.AddAsync(entity);
         }
 
-        public async Task<Application> ApplyForJobAsync(
-            string seekerId,
-            string jobId,
-            string companyId
-        )
-        {
-            return await _applicationRepository.ApplyForJobAsync(seekerId, jobId, companyId);
-        }
+        public Task<Application> ApplyForJobAsync(string seekerId, string jobId, string companyId) =>
+            _applicationRepository.ApplyForJobAsync(seekerId, jobId, companyId);
 
-        public async Task DeleteAsync(string id)
-        {
-            var application = await _applicationRepository.GetByIdAsync(id);
-            if (application == null)
-                throw new Exception($"Application with ID {id} not found.");
+        public Task DeleteAsync(string id) => _applicationRepository.DeleteAsync(id);
 
-            await _applicationRepository.DeleteAsync(id);
-        }
+        public Task<List<Application>> GetAllAsync() => _applicationRepository.GetAllAsync();
 
-        public async Task<List<ApplicationModel>> GetAllAsync()
-        {
-            return await _applicationRepository.GetAllAsync();
-        }
-
-        public async Task<List<ApplicationModel>> GetApplicationBySeekersId(string seekerId)
-        {
-            var applicationBySeekersId = await _applicationRepository.GetApplicationBySeekersId(
-                seekerId
-            );
-            if (applicationBySeekersId == null)
-            {
-                throw new Exception($"Application with ID {seekerId} not found.");
-            }
-            return applicationBySeekersId;
-        }
+        public Task<List<Application>> GetApplicationBySeekersId(string seekerId) =>
+            _applicationRepository.GetApplicationBySeekersId(seekerId);
 
         public Task<Application> GetApplicationDetailsAsync(string applicationId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ApplicationModel> GetByIdAsync(string id)
-        {
-            var application = await _applicationRepository.GetByIdAsync(id);
-            if (application == null)
-                throw new Exception($"Application with ID {id} not found.");
+        public Task<Application> GetByIdAsync(string id) => _applicationRepository.GetByIdAsync(id);
 
-            return application;
-        }
-
-        public async Task<Application> UpdateApplicationStatusAsync(
-            string applicationId,
-            Status status
-        )
+        public Task<Application> UpdateApplicationStatusAsync(string applicationId, Status status)
         {
             if (status == null)
                 throw new ArgumentNullException(nameof(status));
-
-            return await _applicationRepository.UpdateApplicationStatusAsync(applicationId, status);
+            return _applicationRepository.UpdateApplicationStatusAsync(applicationId, status);
         }
 
-        public async Task UpdateAsync(Application entity)
-        {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-
-            await _applicationRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Application entity) => _applicationRepository.UpdateAsync(entity);
     }
 }

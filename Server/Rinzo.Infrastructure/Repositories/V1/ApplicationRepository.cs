@@ -1,21 +1,15 @@
-using Rinzo.Core.Models.Common.V1;
-using Rinzo.Core.Models.Jobs.V1;
 using Rinzo.Core.Entities.Jobs.V1;
 using Rinzo.Core.Interfaces.Jobs.V1;
 using Rinzo.Infrastructure.Data.Contexts;
 using Rinzo.Infrastructure.Data.Contexts.V1.Identity;
-using Rinzo.Infrastructure.Mappers.V1;
 using Microsoft.EntityFrameworkCore;
 
 namespace Rinzo.Infrastructure.Repositories.Companies.V1
 {
     public class ApplicationRepository : IApplicationRepository
     {
-        #region Initialization
         private readonly BaseDBContext _dbContext;
         private readonly ApplicationDbContext _authContext;
-
-        #endregion
 
         public ApplicationRepository(BaseDBContext dbContext, ApplicationDbContext authContext)
         {
@@ -23,19 +17,29 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
             _authContext = authContext ?? throw new ArgumentNullException(nameof(authContext));
         }
 
-        public async Task<ApplicationModel> AddAsync(Application entity)
+        public async Task<Application> AddAsync(Application entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            var userId = _authContext.Users.FirstOrDefault()?.Id;
 
-            var saveToDb = ApplicationMapper.ToApplicationDataBase(entity, userId);
-            await _dbContext.Applications.AddAsync(saveToDb);
+            // The seeker (and status) embedded in the application share the owning
+            // record's id, mirroring the shared-key relationship used elsewhere.
+            var userId = _authContext.Users.FirstOrDefault()?.Id;
+            if (entity.Seekers != null)
+            {
+                entity.Seekers.Id = userId;
+            }
+            if (entity.Status != null)
+            {
+                entity.Status.Id = entity.Id;
+            }
+
+            await _dbContext.Applications.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
 
-            return ApplicationMapper.ToApplicationModel(saveToDb);
+            return entity;
         }
 
         public async Task<Application> ApplyForJobAsync(
@@ -95,7 +99,7 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
                     DecisionDate = DateTime.UtcNow,
                     Comments = "Successfully Applied to the new Job",
                 },
-                Status = new Status { StatusName = Rinzo.Core.Entities.Jobs.V1.StatusName.Active },
+                Status = new Status { StatusName = StatusName.Active },
             };
 
             _dbContext.Add(application);
@@ -109,9 +113,9 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
             throw new NotImplementedException();
         }
 
-        public async Task<List<ApplicationModel>> GetAllAsync()
+        public async Task<List<Application>> GetAllAsync()
         {
-            var entities = await _dbContext
+            return await _dbContext
                 .Applications.Include(p => p.Company)
                 .ThenInclude(p => p.Profile)
                 .Include(p => p.Company)
@@ -131,11 +135,9 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
                 .Include(j => j.ApplicationDate)
                 .Include(j => j.Status)
                 .ToListAsync();
-
-            return entities.Select(ApplicationMapper.ToApplicationModel).ToList();
         }
 
-        public async Task<ApplicationModel> GetByIdAsync(string id)
+        public async Task<Application> GetByIdAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -149,22 +151,17 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
                 .Include(a => a.ApplicationDate)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
-            if (application == null)
-            {
-                throw new KeyNotFoundException($"Application with id {id} not found");
-            }
-
-            return ApplicationMapper.ToApplicationModel(application);
+            return application ?? throw new KeyNotFoundException($"Application with id {id} not found");
         }
 
-        public async Task<List<ApplicationModel>> GetApplicationBySeekersId(string seekerId)
+        public async Task<List<Application>> GetApplicationBySeekersId(string seekerId)
         {
             if (string.IsNullOrEmpty(seekerId))
             {
                 throw new ArgumentException("Seeker ID cannot be null or empty.");
             }
 
-            var entities = await _dbContext
+            return await _dbContext
                 .Applications.Include(p => p.Company)
                 .ThenInclude(p => p.Profile)
                 .Include(p => p.Company)
@@ -185,8 +182,6 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
                 .Include(j => j.Status)
                 .Where(a => a.SeekerId == seekerId)
                 .ToListAsync();
-
-            return entities.Select(ApplicationMapper.ToApplicationModel).ToList();
         }
 
         public Task<Application> UpdateApplicationStatusAsync(string applicationId, Status status)

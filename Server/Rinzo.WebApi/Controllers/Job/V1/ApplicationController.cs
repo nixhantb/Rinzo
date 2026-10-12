@@ -1,5 +1,4 @@
 using FluentValidation;
-using Rinzo.Core.Models.Jobs.V1;
 using Rinzo.Core.Entities.Jobs.V1;
 using Rinzo.Core.Interfaces.Jobs.V1;
 using Microsoft.AspNetCore.Mvc;
@@ -8,8 +7,7 @@ namespace Rinzo.WebApi.Controllers.Job.V1
 {
     [Route("api/v1/applications")]
     [ApiController]
-    public class ApplicationController
-        : BaseApiController<Application, ApplicationModel, IApplicationService>
+    public class ApplicationController : BaseApiController<Application, IApplicationService>
     {
         public ApplicationController(
             IApplicationService applicationService,

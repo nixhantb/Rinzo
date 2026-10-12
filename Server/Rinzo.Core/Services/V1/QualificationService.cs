@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 
@@ -15,38 +14,22 @@ namespace Rinzo.Core.Services
                 ?? throw new ArgumentNullException(nameof(qualificationTypeRepository));
         }
 
-        public async Task<QualificationModel> AddAsync(Qualification entity)
+        public Task<Qualification> AddAsync(Qualification entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-            var result = await _qualificationTypeRepository.AddAsync(entity);
-            return result;
+            return _qualificationTypeRepository.AddAsync(entity);
         }
 
-        public async Task DeleteAsync(string id)
-        {
-            await _qualificationTypeRepository.DeleteAsync(id);
-        }
+        public Task DeleteAsync(string id) => _qualificationTypeRepository.DeleteAsync(id);
 
-        public async Task<List<QualificationModel>> GetAllAsync()
-        {
-            var qualification = await _qualificationTypeRepository.GetAllAsync();
-            return qualification;
-        }
+        public Task<List<Qualification>> GetAllAsync() =>
+            _qualificationTypeRepository.GetAllAsync();
 
-        public async Task<QualificationModel> GetByIdAsync(string id)
-        {
-            var qualification = await _qualificationTypeRepository.GetByIdAsync(id);
-            if (qualification == null)
-            {
-                throw new Exception($"Job with ID {id} not found.");
-            }
-            return qualification;
-        }
+        public Task<Qualification> GetByIdAsync(string id) =>
+            _qualificationTypeRepository.GetByIdAsync(id);
 
-        public async Task UpdateAsync(Qualification entity)
-        {
-            await _qualificationTypeRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Qualification entity) =>
+            _qualificationTypeRepository.UpdateAsync(entity);
     }
 }

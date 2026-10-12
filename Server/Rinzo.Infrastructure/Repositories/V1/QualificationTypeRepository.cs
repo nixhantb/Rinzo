@@ -1,4 +1,3 @@
-﻿using Rinzo.Core.Models.Common.V1;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 using Rinzo.Infrastructure.Data.Contexts;
@@ -15,7 +14,7 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
             _dbContext = dbContext;
         }
 
-        public Task<QualificationModel> AddAsync(Qualification entity)
+        public Task<Qualification> AddAsync(Qualification entity)
         {
             throw new NotImplementedException();
         }
@@ -25,19 +24,12 @@ namespace Rinzo.Infrastructure.Repositories.Common.V1
             throw new NotImplementedException();
         }
 
-        public async Task<List<QualificationModel>> GetAllAsync()
+        public async Task<List<Qualification>> GetAllAsync()
         {
-            return await _dbContext
-                .Qualifications.Select(e => new QualificationModel
-                {
-                    Id = e.Id,
-                    QualificationType = e.QualificationType,
-                    QualificationInformation = e.QualificationInformation,
-                })
-                .ToListAsync();
+            return await _dbContext.Qualifications.ToListAsync();
         }
 
-        public Task<QualificationModel> GetByIdAsync(string id)
+        public Task<Qualification> GetByIdAsync(string id)
         {
             throw new NotImplementedException();
         }

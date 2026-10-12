@@ -1,4 +1,3 @@
-using Rinzo.Core.Models.Seekers.V1;
 using Rinzo.Core.Entities.Seekers.V1;
 using Rinzo.Core.Interfaces.Seekers.V1;
 
@@ -14,36 +13,14 @@ namespace Rinzo.Core.Services
                 seekerRepository ?? throw new ArgumentNullException(nameof(seekerRepository));
         }
 
-        public Task<SeekerModel> AddAsync(Seeker entity)
-        {
-            var seeker = _seekerRepository.AddAsync(entity);
-            return seeker;
-        }
+        public Task<Seeker> AddAsync(Seeker entity) => _seekerRepository.AddAsync(entity);
 
-        public async Task DeleteAsync(string id)
-        {
-            await _seekerRepository.DeleteAsync(id);
-        }
+        public Task DeleteAsync(string id) => _seekerRepository.DeleteAsync(id);
 
-        public Task<List<SeekerModel>> GetAllAsync()
-        {
-            var seeker = _seekerRepository.GetAllAsync();
-            return seeker;
-        }
+        public Task<List<Seeker>> GetAllAsync() => _seekerRepository.GetAllAsync();
 
-        public Task<SeekerModel> GetByIdAsync(string id)
-        {
-            var seeker = _seekerRepository.GetByIdAsync(id);
-            if (seeker == null)
-            {
-                throw new Exception($"seeker with ID {id} not found.");
-            }
-            return seeker;
-        }
+        public Task<Seeker> GetByIdAsync(string id) => _seekerRepository.GetByIdAsync(id);
 
-        public async Task UpdateAsync(Seeker entity)
-        {
-            await _seekerRepository.UpdateAsync(entity);
-        }
+        public Task UpdateAsync(Seeker entity) => _seekerRepository.UpdateAsync(entity);
     }
 }
