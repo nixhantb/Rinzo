@@ -16,5 +16,5 @@ jobs:
 
       - name: Check formatting with CSharpier
         run: |
-          cd Server/JobLeet.WebApi
+          cd Server
           dotnet csharpier --check .

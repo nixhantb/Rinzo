@@ -1,4 +1,6 @@
 #!/bin/bash
+# Run from Server/Rinzo.WebApi. DbContexts live in Rinzo.Infrastructure, so migrations
+# are generated there with Rinzo.WebApi as the startup project (it has the DI/config wiring).
 
 random_number() {
   echo $((RANDOM % 10000 + 1))
@@ -28,13 +30,16 @@ case $choice in
 esac
 
 # Run the EF Core migration and update database
-command="dotnet ef migrations add $migration_name --context $context"
+project="../Rinzo.Infrastructure/Rinzo.Infrastructure.csproj"
+startup_project="Rinzo.WebApi.csproj"
+
+command="dotnet ef migrations add $migration_name --context $context --project $project --startup-project $startup_project"
 echo "Running: $command"
 $command
 
 if [ $? -eq 0 ]; then
   echo "Migration created successfully."
-  update_command="dotnet ef database update --context $context"
+  update_command="dotnet ef database update --context $context --project $project --startup-project $startup_project"
   echo "Running: $update_command"
   $update_command
 

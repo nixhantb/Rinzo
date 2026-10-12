@@ -1,6 +1,6 @@
 ## Contributing to Rinzo
 
-Thank you for considering contributing to Job Leet! We’re excited to have you help improve the project. To ensure that contributions are smooth and effective, please follow these guidelines:
+Thank you for considering contributing to Rinzo! We’re excited to have you help improve the project. To ensure that contributions are smooth and effective, please follow these guidelines:
 
 ### Steps to Contribute:
 

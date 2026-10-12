@@ -1,35 +1,40 @@
 services:
-  jobleet-database:
-    image: postgres:13
-    container_name: postgresql_server
+  rinzo-database:
+    image: postgres:16
+    container_name: rinzo_postgres
     ports:
       - "5432:5432"
     env_file:
-      - Server/JobLeet.WebApi/.env
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${DB_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  jobleet-api:
+  rinzo-api:
     build:
       context: .
-      dockerfile: Server/JobLeet.WebApi/Dockerfile
+      dockerfile: Server/Rinzo.WebApi/Dockerfile
+    container_name: rinzo_api
     depends_on:
-      jobleet-database:
+      rinzo-database:
         condition: service_healthy
     ports:
       - "8080:8080"
     env_file:
-      - Server/JobLeet.WebApi/.env
+      - .env
     environment:
-      - DBHOST=jobleet-database
-      - ASPNETCORE_ENVIRONMENT=Development
+      DB_HOST: rinzo-database
+      ASPNETCORE_ENVIRONMENT: Development
 
 volumes:
   db_data:
 
-name: jobleet-project
+name: rinzo-project
