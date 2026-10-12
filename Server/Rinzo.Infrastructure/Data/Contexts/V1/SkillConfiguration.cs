@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
-using Rinzo.Core.Entities.Common.V1;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Rinzo.Core.Entities.Common.V1;
 
 namespace Rinzo.Infrastructure.Data.Contexts.V1
 {

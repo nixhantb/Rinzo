@@ -1,8 +1,8 @@
 using FluentValidation;
-using Rinzo.Core.Entities.Employers.V1;
-using Rinzo.Core.Interfaces.Employers.V1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Rinzo.Core.Entities.Employers.V1;
+using Rinzo.Core.Interfaces.Employers.V1;
 
 namespace Rinzo.WebApi.Controllers.Job.V1
 {

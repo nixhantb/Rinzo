@@ -1,10 +1,10 @@
 using System.Text.Json;
-using Rinzo.Core.Entities.Common.V1;
-using Rinzo.Core.Entities.Jobs.V1;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Rinzo.Core.Entities.Common.V1;
+using Rinzo.Core.Entities.Jobs.V1;
 
 namespace Rinzo.Infrastructure.Data.Contexts.V1
 {

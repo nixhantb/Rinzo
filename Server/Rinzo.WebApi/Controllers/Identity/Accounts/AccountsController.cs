@@ -1,10 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Rinzo.WebApi.Models.Identity.Accounts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Rinzo.WebApi.Models.Identity.Accounts;
 
 namespace Rinzo.WebApi.Controllers.Identity.Accounts
 {

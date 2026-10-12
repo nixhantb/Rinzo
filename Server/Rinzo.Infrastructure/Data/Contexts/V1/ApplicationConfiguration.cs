@@ -1,6 +1,6 @@
-using Rinzo.Core.Entities.Jobs.V1;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Rinzo.Core.Entities.Jobs.V1;
 
 namespace Rinzo.Infrastructure.Data.Contexts.V1
 {

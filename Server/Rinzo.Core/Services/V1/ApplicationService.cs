@@ -21,8 +21,11 @@ namespace Rinzo.Core.Services
             return _applicationRepository.AddAsync(entity);
         }
 
-        public Task<Application> ApplyForJobAsync(string seekerId, string jobId, string companyId) =>
-            _applicationRepository.ApplyForJobAsync(seekerId, jobId, companyId);
+        public Task<Application> ApplyForJobAsync(
+            string seekerId,
+            string jobId,
+            string companyId
+        ) => _applicationRepository.ApplyForJobAsync(seekerId, jobId, companyId);
 
         public Task DeleteAsync(string id) => _applicationRepository.DeleteAsync(id);
 

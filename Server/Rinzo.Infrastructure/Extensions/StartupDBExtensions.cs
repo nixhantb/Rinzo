@@ -1,8 +1,8 @@
-using Rinzo.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Rinzo.Infrastructure.Data.Contexts;
 
 namespace Rinzo.Infrastructure.Extensions
 {

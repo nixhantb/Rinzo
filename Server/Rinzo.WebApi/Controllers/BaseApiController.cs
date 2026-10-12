@@ -1,6 +1,6 @@
 using FluentValidation;
-using Rinzo.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Rinzo.Core.Interfaces;
 
 namespace Rinzo.WebApi.Controllers
 {

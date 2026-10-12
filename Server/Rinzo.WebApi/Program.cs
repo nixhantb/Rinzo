@@ -1,7 +1,9 @@
 using System.Text;
 using FluentValidation;
-using Rinzo.WebApi.Middlewares.Exceptions;
-using Rinzo.Core.Validators;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Entities.Companies.V1;
 using Rinzo.Core.Entities.Employers.V1;
@@ -14,20 +16,18 @@ using Rinzo.Core.Interfaces.Employers.V1;
 using Rinzo.Core.Interfaces.Jobs.V1;
 using Rinzo.Core.Interfaces.Seekers.V1;
 using Rinzo.Core.Services;
+using Rinzo.Core.Validators;
 using Rinzo.Core.Validators.Jobs;
 using Rinzo.Core.Validators.Seekers;
 using Rinzo.Infrastructure.Data.Contexts;
 using Rinzo.Infrastructure.Data.Contexts.V1.Identity;
 using Rinzo.Infrastructure.Extensions;
 using Rinzo.Infrastructure.Repositories.Common.V1;
-using Rinzo.Infrastructure.Repositories.Jobs.V1;
-using Rinzo.Infrastructure.Repositories.Seekers.V1;
 using Rinzo.Infrastructure.Repositories.Companies.V1;
 using Rinzo.Infrastructure.Repositories.Employers.V1;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using Rinzo.Infrastructure.Repositories.Jobs.V1;
+using Rinzo.Infrastructure.Repositories.Seekers.V1;
+using Rinzo.WebApi.Middlewares.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 

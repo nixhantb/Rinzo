@@ -1,8 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Rinzo.Core.Entities.Jobs.V1;
 using Rinzo.Core.Interfaces.Jobs.V1;
 using Rinzo.Infrastructure.Data.Contexts;
 using Rinzo.Infrastructure.Data.Contexts.V1.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rinzo.Infrastructure.Repositories.Companies.V1
 {
@@ -151,7 +151,8 @@ namespace Rinzo.Infrastructure.Repositories.Companies.V1
                 .Include(a => a.ApplicationDate)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
-            return application ?? throw new KeyNotFoundException($"Application with id {id} not found");
+            return application
+                ?? throw new KeyNotFoundException($"Application with id {id} not found");
         }
 
         public async Task<List<Application>> GetApplicationBySeekersId(string seekerId)

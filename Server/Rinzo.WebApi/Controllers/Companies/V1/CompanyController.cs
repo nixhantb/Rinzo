@@ -1,7 +1,7 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Rinzo.Core.Entities.Companies.V1;
 using Rinzo.Core.Interfaces.Companies.V1;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Rinzo.WebApi.Controllers.Companies.V1
 {

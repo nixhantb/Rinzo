@@ -1,7 +1,7 @@
 using FluentValidation;
 using Rinzo.Core.Entities.Jobs.V1;
-using Rinzo.Core.Validators.Seekers;
 using Rinzo.Core.Validators;
+using Rinzo.Core.Validators.Seekers;
 
 namespace Rinzo.Core.Validators.Jobs
 {

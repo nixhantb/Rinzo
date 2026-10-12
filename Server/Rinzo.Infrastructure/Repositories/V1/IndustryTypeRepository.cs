@@ -1,7 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Rinzo.Core.Entities.Companies.V1;
 using Rinzo.Core.Interfaces.Companies.V1;
 using Rinzo.Infrastructure.Data.Contexts;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rinzo.Infrastructure.Repositories.Companies.V1
 {

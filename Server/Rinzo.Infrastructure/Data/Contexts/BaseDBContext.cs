@@ -1,11 +1,11 @@
-﻿using Rinzo.Core.Entities.Common.V1;
+﻿using Microsoft.EntityFrameworkCore;
+using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Entities.Companies.V1;
 using Rinzo.Core.Entities.Employers.V1;
 using Rinzo.Core.Entities.Jobs.V1;
 using Rinzo.Core.Entities.Seekers.V1;
 using Rinzo.Infrastructure.Data.Contexts.V1;
 using Rinzo.Infrastructure.Repositories.Seekers.V1;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rinzo.Infrastructure.Data.Contexts
 {

@@ -1,11 +1,11 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Rinzo.Core.Entities.Seekers.V1;
 using Rinzo.Core.Interfaces.Seekers.V1;
 using Rinzo.Infrastructure.Data.Contexts;
 using Rinzo.Infrastructure.Data.Contexts.V1.Identity;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace Rinzo.Infrastructure.Repositories.Seekers.V1
 {

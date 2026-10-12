@@ -1,7 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Rinzo.Core.Entities.Employers.V1;
 using Rinzo.Core.Interfaces.Employers.V1;
 using Rinzo.Infrastructure.Data.Contexts;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rinzo.Infrastructure.Repositories.Employers.V1
 {

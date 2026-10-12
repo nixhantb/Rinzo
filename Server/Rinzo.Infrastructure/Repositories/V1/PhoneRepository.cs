@@ -1,7 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Rinzo.Core.Entities.Common.V1;
 using Rinzo.Core.Interfaces.Common.V1;
 using Rinzo.Infrastructure.Data.Contexts;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rinzo.Infrastructure.Repositories.Common.V1
 {
