@@ -23,7 +23,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Address", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Address", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -58,7 +58,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_userAddress", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Education", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Education", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -101,7 +101,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_education", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Email", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Email", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -121,7 +121,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("Emails");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Experience", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Experience", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -157,7 +157,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_experience", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.PersonName", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.PersonName", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -184,7 +184,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_personName", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Phone", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Phone", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -207,7 +207,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_phone", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Project", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Project", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -253,7 +253,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("Project");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Qualification", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Qualification", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -281,7 +281,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_qualification", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Skill", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Skill", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -304,7 +304,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_skill", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Companies.V1.Company", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Companies.Company", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -328,7 +328,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_company", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Companies.V1.CompanyProfile", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Companies.CompanyProfile", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -370,7 +370,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_companyprofile", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Companies.V1.Industry", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Companies.Industry", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -389,7 +389,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_industryType", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Employers.V1.Employer", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Employers.Employer", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -429,7 +429,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_employer", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.V1.Application", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.Application", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -472,7 +472,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_application", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.V1.ApplicationDate", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.ApplicationDate", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -498,7 +498,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("ApplicationDate");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.V1.JobEntity", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.JobEntity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -590,7 +590,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_job", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.V1.Status", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.Status", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -607,7 +607,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("Status");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.V1.Seeker", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.Seeker", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -654,7 +654,7 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("jblt_seeker", (string)null);
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.V1.SocialMedia", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.SocialMedia", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -679,58 +679,58 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.ToTable("SocialMedia");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Education", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Education", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Seekers.V1.Seeker", null)
+                    b.HasOne("Rinzo.Core.Entities.Seekers.Seeker", null)
                         .WithMany("Education")
                         .HasForeignKey("SeekerId");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Experience", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Experience", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Seekers.V1.Seeker", null)
+                    b.HasOne("Rinzo.Core.Entities.Seekers.Seeker", null)
                         .WithMany("Experience")
                         .HasForeignKey("SeekerId");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Project", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Project", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Seekers.V1.Seeker", null)
+                    b.HasOne("Rinzo.Core.Entities.Seekers.Seeker", null)
                         .WithMany("Projects")
                         .HasForeignKey("SeekerId");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Common.V1.Qualification", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Common.Qualification", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Seekers.V1.Seeker", null)
+                    b.HasOne("Rinzo.Core.Entities.Seekers.Seeker", null)
                         .WithMany("Qualifications")
                         .HasForeignKey("SeekerId");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Companies.V1.Company", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Companies.Company", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Companies.V1.CompanyProfile", "Profile")
+                    b.HasOne("Rinzo.Core.Entities.Companies.CompanyProfile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId");
 
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Companies.V1.CompanyProfile", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Companies.CompanyProfile", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Address", "CompanyAddress")
+                    b.HasOne("Rinzo.Core.Entities.Common.Address", "CompanyAddress")
                         .WithMany()
                         .HasForeignKey("CompanyAddressId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Email", "ContactEmail")
+                    b.HasOne("Rinzo.Core.Entities.Common.Email", "ContactEmail")
                         .WithMany()
                         .HasForeignKey("ContactEmailId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Phone", "ContactPhone")
+                    b.HasOne("Rinzo.Core.Entities.Common.Phone", "ContactPhone")
                         .WithMany()
                         .HasForeignKey("ContactPhoneId");
 
-                    b.HasOne("Rinzo.Core.Entities.Companies.V1.Industry", "IndustryTypes")
+                    b.HasOne("Rinzo.Core.Entities.Companies.Industry", "IndustryTypes")
                         .WithMany()
                         .HasForeignKey("IndustryTypesId");
 
@@ -743,25 +743,25 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.Navigation("IndustryTypes");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Employers.V1.Employer", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Employers.Employer", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Address", "Address")
+                    b.HasOne("Rinzo.Core.Entities.Common.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("Rinzo.Core.Entities.Companies.V1.Company", "Company")
+                    b.HasOne("Rinzo.Core.Entities.Companies.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId");
 
-                    b.HasOne("Rinzo.Core.Entities.Companies.V1.Industry", "IndustryType")
+                    b.HasOne("Rinzo.Core.Entities.Companies.Industry", "IndustryType")
                         .WithMany()
                         .HasForeignKey("IndustryTypeId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.PersonName", "Name")
+                    b.HasOne("Rinzo.Core.Entities.Common.PersonName", "Name")
                         .WithMany()
                         .HasForeignKey("NameId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Phone", "Phone")
+                    b.HasOne("Rinzo.Core.Entities.Common.Phone", "Phone")
                         .WithMany()
                         .HasForeignKey("PhoneId");
 
@@ -776,31 +776,31 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.Navigation("Phone");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.V1.Application", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.Application", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Jobs.V1.ApplicationDate", "ApplicationDate")
+                    b.HasOne("Rinzo.Core.Entities.Jobs.ApplicationDate", "ApplicationDate")
                         .WithMany()
                         .HasForeignKey("ApplicationDateId");
 
-                    b.HasOne("Rinzo.Core.Entities.Companies.V1.Company", "Company")
+                    b.HasOne("Rinzo.Core.Entities.Companies.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rinzo.Core.Entities.Jobs.V1.JobEntity", "Jobs")
+                    b.HasOne("Rinzo.Core.Entities.Jobs.JobEntity", "Jobs")
                         .WithMany()
                         .HasForeignKey("JobsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rinzo.Core.Entities.Seekers.V1.Seeker", "Seekers")
+                    b.HasOne("Rinzo.Core.Entities.Seekers.Seeker", "Seekers")
                         .WithMany()
                         .HasForeignKey("SeekerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rinzo.Core.Entities.Jobs.V1.Status", "Status")
+                    b.HasOne("Rinzo.Core.Entities.Jobs.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
 
@@ -815,25 +815,25 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.V1.JobEntity", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Jobs.JobEntity", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Companies.V1.Company", "CompanyDescription")
+                    b.HasOne("Rinzo.Core.Entities.Companies.Company", "CompanyDescription")
                         .WithMany()
                         .HasForeignKey("CompanyDescriptionId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Address", "JobAddress")
+                    b.HasOne("Rinzo.Core.Entities.Common.Address", "JobAddress")
                         .WithMany()
                         .HasForeignKey("JobAddressId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Experience", "RequiredExperience")
+                    b.HasOne("Rinzo.Core.Entities.Common.Experience", "RequiredExperience")
                         .WithMany()
                         .HasForeignKey("RequiredExperienceId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Qualification", "RequiredQualification")
+                    b.HasOne("Rinzo.Core.Entities.Common.Qualification", "RequiredQualification")
                         .WithMany()
                         .HasForeignKey("RequiredQualificationId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Skill", "SkillsRequired")
+                    b.HasOne("Rinzo.Core.Entities.Common.Skill", "SkillsRequired")
                         .WithMany()
                         .HasForeignKey("SkillsRequiredId");
 
@@ -848,21 +848,21 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.Navigation("SkillsRequired");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.V1.Seeker", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.Seeker", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Address", "Address")
+                    b.HasOne("Rinzo.Core.Entities.Common.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.PersonName", "PersonName")
+                    b.HasOne("Rinzo.Core.Entities.Common.PersonName", "PersonName")
                         .WithMany()
                         .HasForeignKey("PersonNameId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Phone", "Phone")
+                    b.HasOne("Rinzo.Core.Entities.Common.Phone", "Phone")
                         .WithMany()
                         .HasForeignKey("PhoneId");
 
-                    b.HasOne("Rinzo.Core.Entities.Common.V1.Skill", "Skills")
+                    b.HasOne("Rinzo.Core.Entities.Common.Skill", "Skills")
                         .WithMany()
                         .HasForeignKey("SkillsId");
 
@@ -875,14 +875,14 @@ namespace Rinzo.Infrastructure.Migrations.BaseDB
                     b.Navigation("Skills");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.V1.SocialMedia", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.SocialMedia", b =>
                 {
-                    b.HasOne("Rinzo.Core.Entities.Seekers.V1.Seeker", null)
+                    b.HasOne("Rinzo.Core.Entities.Seekers.Seeker", null)
                         .WithMany("SocialMedias")
                         .HasForeignKey("SeekerId");
                 });
 
-            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.V1.Seeker", b =>
+            modelBuilder.Entity("Rinzo.Core.Entities.Seekers.Seeker", b =>
                 {
                     b.Navigation("Education");
 

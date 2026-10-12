@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Rinzo.Core.Entities.Common
+{
+    public class Education : BaseEntity
+    {
+        public string Degree { get; set; }
+
+        public string Major { get; set; }
+
+        public string Institution { get; set; }
+
+        public DateOnly GraduationDate { get; set; }
+
+        public decimal Cgpa { get; set; }
+    }
+}
