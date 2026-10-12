@@ -7,7 +7,7 @@ using Rinzo.Core.Interfaces.Jobs;
 namespace Rinzo.WebApi.Controllers.Job
 {
     // [Authorize]
-    [Route("api/v1/jobs")]
+    [Route("api/jobs")]
     [ApiController]
     public class JobController : BaseApiController<JobEntity, IJobRepository>
     {

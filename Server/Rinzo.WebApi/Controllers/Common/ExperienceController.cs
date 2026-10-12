@@ -5,7 +5,7 @@ using Rinzo.Core.Interfaces.Common;
 
 namespace Rinzo.WebApi.Controllers.Common
 {
-    [Route("api/v1/experiences")]
+    [Route("api/experiences")]
     public class ExperienceController : BaseApiController<Experience, IExperienceRepository>
     {
         public ExperienceController(

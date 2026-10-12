@@ -5,7 +5,7 @@ using Rinzo.Core.Interfaces.Common;
 
 namespace Rinzo.WebApi.Controllers.Common
 {
-    [Route("api/v1/educations")]
+    [Route("api/educations")]
     public class EducationController : BaseApiController<Education, IEducationRepository>
     {
         public EducationController(

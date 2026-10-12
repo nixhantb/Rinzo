@@ -5,7 +5,7 @@ using Rinzo.Core.Interfaces.Common;
 
 namespace Rinzo.WebApi.Controllers.Common
 {
-    [Route("api/v1/qualification-types")]
+    [Route("api/qualification-types")]
     public class QualificationController
         : BaseApiController<Qualification, IQualificationTypeRepository>
     {

@@ -5,7 +5,7 @@ using Rinzo.Core.Interfaces.Common;
 
 namespace Rinzo.WebApi.Controllers.Common
 {
-    [Route("api/v1/email-types")]
+    [Route("api/email-types")]
     public class EmailController : BaseApiController<Email, IEmaiTypeRepository>
     {
         public EmailController(IEmaiTypeRepository emailRepository, IValidator<Email> validator)

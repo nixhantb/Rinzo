@@ -7,7 +7,7 @@ using Rinzo.Core.Interfaces.Seekers;
 namespace Rinzo.WebApi.Controllers.Seekers
 {
     [Authorize]
-    [Route("api/v1/seekers")]
+    [Route("api/seekers")]
     public class SeekersController : BaseApiController<Seeker, ISeekerRepository>
     {
         public SeekersController(ISeekerRepository seekerRepository, IValidator<Seeker> validator)

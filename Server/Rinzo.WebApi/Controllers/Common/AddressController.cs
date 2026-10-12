@@ -5,7 +5,7 @@ using Rinzo.Core.Interfaces.Common;
 
 namespace Rinzo.WebApi.Controllers.Common
 {
-    [Route("api/v1/addresses")]
+    [Route("api/addresses")]
     public class AddressController : BaseApiController<Address, IAddressRepository>
     {
         public AddressController(

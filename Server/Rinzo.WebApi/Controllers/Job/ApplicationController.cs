@@ -5,7 +5,7 @@ using Rinzo.Core.Interfaces.Jobs;
 
 namespace Rinzo.WebApi.Controllers.Job
 {
-    [Route("api/v1/applications")]
+    [Route("api/applications")]
     [ApiController]
     public class ApplicationController : BaseApiController<Application, IApplicationRepository>
     {

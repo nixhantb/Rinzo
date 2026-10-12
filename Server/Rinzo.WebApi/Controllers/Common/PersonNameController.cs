@@ -5,7 +5,7 @@ using Rinzo.Core.Interfaces.Common;
 
 namespace Rinzo.WebApi.Controllers.Common
 {
-    [Route("api/v1/person-names")]
+    [Route("api/person-names")]
     public class PersonNameController : BaseApiController<PersonName, IPersonNameRepository>
     {
         public PersonNameController(

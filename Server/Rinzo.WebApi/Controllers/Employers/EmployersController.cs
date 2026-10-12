@@ -7,7 +7,7 @@ using Rinzo.Core.Interfaces.Employers;
 namespace Rinzo.WebApi.Controllers.Employers
 {
     [Authorize]
-    [Route("api/v1/employers")]
+    [Route("api/employers")]
     public class EmployerController : BaseApiController<Employer, IEmployerRepository>
     {
         public EmployerController(

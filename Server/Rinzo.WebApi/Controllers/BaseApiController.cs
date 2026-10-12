@@ -4,7 +4,7 @@ using Rinzo.Core.Interfaces;
 
 namespace Rinzo.WebApi.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public abstract class BaseApiController<TEntity, TRepository> : ControllerBase
         where TEntity : class

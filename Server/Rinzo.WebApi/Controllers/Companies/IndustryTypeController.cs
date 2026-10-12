@@ -5,7 +5,7 @@ using Rinzo.Core.Interfaces.Companies;
 
 namespace Rinzo.WebApi.Controllers.Companies
 {
-    [Route("api/v1/industry-types")]
+    [Route("api/industry-types")]
     public class IndustryTypeController : BaseApiController<Industry, IIndustryTypeRepository>
     {
         public IndustryTypeController(
