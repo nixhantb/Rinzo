@@ -41,5 +41,5 @@ Thank you for considering contributing to Rinzo! We’re excited to have you hel
    - Refactor when necessary to keep the codebase maintainable and efficient.
 
 ### Reporting Issues:
-If you encounter any issues or have suggestions for improvements, please open an issue [here](https://github.com/Nix-code/Rinzo/issues) and provide clear details about the problem or enhancement.
+If you encounter any issues or have suggestions for improvements, please open an issue [here](https://github.com/nixhantb/Rinzo/issues) and provide clear details about the problem or enhancement.
 
