@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Rinzo.Core.Entities;
 using Rinzo.Core.Interfaces;
 
 namespace Rinzo.WebApi.Controllers
@@ -7,7 +8,7 @@ namespace Rinzo.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public abstract class BaseApiController<TEntity, TRepository> : ControllerBase
-        where TEntity : class
+        where TEntity : BaseEntity
         where TRepository : IRepository<TEntity>
     {
         protected readonly TRepository _repository;
@@ -76,6 +77,57 @@ namespace Rinzo.WebApi.Controllers
 
             var result = await _repository.AddAsync(entity);
             return Ok(result);
+        }
+        #endregion
+
+        #region PUT Request
+        /// <returns>No content on success.</returns>
+        /// <remarks>This method updates the record identified by the route id. The route id
+        /// always wins over whatever (if anything) came in the body, since Id is
+        /// [JsonIgnore]'d and never binds from client JSON.</remarks>
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public virtual async Task<IActionResult> UpdateAsync(string id, [FromBody] TEntity entity)
+        {
+            if (entity == null)
+            {
+                return BadRequest();
+            }
+
+            var validationResult = _validator.Validate(entity);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(
+                    new
+                    {
+                        Message = "Validation failed.",
+                        Errors = validationResult.Errors.Select(e => new
+                        {
+                            e.PropertyName,
+                            e.ErrorMessage,
+                        }),
+                    }
+                );
+            }
+
+            entity.Id = id;
+            await _repository.UpdateAsync(entity);
+            return NoContent();
+        }
+        #endregion
+
+        #region DELETE Request
+        /// <returns>No content on success.</returns>
+        /// <remarks>This method deletes the record identified by the route id.</remarks>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public virtual async Task<IActionResult> DeleteAsync(string id)
+        {
+            await _repository.DeleteAsync(id);
+            return NoContent();
         }
         #endregion
     }
