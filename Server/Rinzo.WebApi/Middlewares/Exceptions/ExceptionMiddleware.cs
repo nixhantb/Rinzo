@@ -38,6 +38,14 @@ namespace Rinzo.WebApi.Middlewares.Exceptions
                     appEx.Message
                 ),
 
+                // ArgumentNullException derives from ArgumentException, so this one
+                // case covers both - both mean the caller sent something invalid.
+                ArgumentException argEx => new ExceptionResponse(
+                    HttpStatusCode.BadRequest,
+                    "Invalid request.",
+                    argEx.Message
+                ),
+
                 KeyNotFoundException notFoundEx => new ExceptionResponse(
                     HttpStatusCode.NotFound,
                     "The requested resource was not found.",
