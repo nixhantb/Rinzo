@@ -17,6 +17,30 @@ namespace Rinzo.Infrastructure.Repositories.Companies
             _authContext = authContext ?? throw new ArgumentNullException(nameof(authContext));
         }
 
+        // Shared by GetAllAsync/GetApplicationBySeekersId so the two can't silently drift
+        // apart. All single-reference includes - no collections here, so no
+        // cartesian-explosion risk in this one.
+        private IQueryable<Application> ApplicationsWithDetails() =>
+            _dbContext
+                .Applications.Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.CompanyAddress)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.ContactEmail)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.ContactPhone)
+                .Include(p => p.Company)
+                .ThenInclude(p => p.Profile)
+                .ThenInclude(p => p.IndustryTypes)
+                .Include(j => j.Jobs)
+                .ThenInclude(j => j.JobAddress)
+                .Include(j => j.ApplicationDate)
+                .Include(j => j.Status);
+
         public async Task<Application> AddAsync(Application entity)
         {
             if (entity == null)
@@ -48,40 +72,36 @@ namespace Rinzo.Infrastructure.Repositories.Companies
             string companyId
         )
         {
-            var seeker = await _dbContext
-                .Seekers.Include(s => s.Phone)
-                .Include(s => s.Education)
-                .Include(s => s.Address)
-                .Include(s => s.Skills)
-                .FirstOrDefaultAsync(s => s.Id == seekerId);
-            if (seeker == null)
+            // Cheapest check first: if they've already applied, there's no point
+            // touching Seekers/Companies/Jobs at all.
+            var alreadyApplied = await _dbContext.Applications.AnyAsync(a =>
+                a.SeekerId == seekerId && a.JobsId == jobId
+            );
+            if (alreadyApplied)
+            {
+                throw new ApplicationException("Seeker has already applied for this job.");
+            }
+
+            // These three are existence checks only - the application below is built
+            // from the raw ids, not from the fetched entities - so there's no reason to
+            // pull Seeker/Company/Job (and everything EF would eagerly include with them)
+            // across the wire just to find out whether a row with that id exists.
+            var seekerExists = await _dbContext.Seekers.AnyAsync(s => s.Id == seekerId);
+            if (!seekerExists)
             {
                 throw new KeyNotFoundException($"Seeker with id {seekerId} not found");
             }
 
-            var company = await _dbContext
-                .Companies.Include(c => c.Profile)
-                .FirstOrDefaultAsync(c => c.Id == companyId);
-            if (company == null)
+            var companyExists = await _dbContext.Companies.AnyAsync(c => c.Id == companyId);
+            if (!companyExists)
             {
                 throw new KeyNotFoundException($"Company with id {companyId} not found");
             }
 
-            var job = await _dbContext
-                .Jobs.Include(j => j.CompanyDescription)
-                .Include(j => j.SkillsRequired)
-                .FirstOrDefaultAsync(j => j.Id == jobId);
-            if (job == null)
+            var jobExists = await _dbContext.Jobs.AnyAsync(j => j.Id == jobId);
+            if (!jobExists)
             {
                 throw new KeyNotFoundException($"Job with id {jobId} not found");
-            }
-
-            var existingApplication = await _dbContext.Applications.FirstOrDefaultAsync(a =>
-                a.SeekerId == seekerId && a.JobsId == jobId
-            );
-            if (existingApplication != null)
-            {
-                throw new ApplicationException("Seeker has already applied for this job.");
             }
 
             var application = new Application
@@ -115,26 +135,7 @@ namespace Rinzo.Infrastructure.Repositories.Companies
 
         public async Task<List<Application>> GetAllAsync()
         {
-            return await _dbContext
-                .Applications.Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .ThenInclude(p => p.CompanyAddress)
-                .Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .ThenInclude(p => p.ContactEmail)
-                .Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .ThenInclude(p => p.ContactPhone)
-                .Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .ThenInclude(p => p.IndustryTypes)
-                .Include(j => j.Jobs)
-                .ThenInclude(j => j.JobAddress)
-                .Include(j => j.ApplicationDate)
-                .Include(j => j.Status)
-                .ToListAsync();
+            return await ApplicationsWithDetails().ToListAsync();
         }
 
         public async Task<Application> GetByIdAsync(string id)
@@ -162,27 +163,7 @@ namespace Rinzo.Infrastructure.Repositories.Companies
                 throw new ArgumentException("Seeker ID cannot be null or empty.");
             }
 
-            return await _dbContext
-                .Applications.Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .ThenInclude(p => p.CompanyAddress)
-                .Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .ThenInclude(p => p.ContactEmail)
-                .Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .ThenInclude(p => p.ContactPhone)
-                .Include(p => p.Company)
-                .ThenInclude(p => p.Profile)
-                .ThenInclude(p => p.IndustryTypes)
-                .Include(j => j.Jobs)
-                .ThenInclude(j => j.JobAddress)
-                .Include(j => j.ApplicationDate)
-                .Include(j => j.Status)
-                .Where(a => a.SeekerId == seekerId)
-                .ToListAsync();
+            return await ApplicationsWithDetails().Where(a => a.SeekerId == seekerId).ToListAsync();
         }
 
         public Task<Application> UpdateApplicationStatusAsync(string applicationId, Status status)

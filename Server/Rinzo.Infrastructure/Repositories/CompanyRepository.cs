@@ -14,6 +14,20 @@ namespace Rinzo.Infrastructure.Repositories.Companies
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+        // Shared by GetAllAsync/GetByIdAsync so the two can't silently drift apart.
+        // All single-reference includes (Profile -> one of each) - no collections here,
+        // so there's no cartesian-explosion risk to worry about in this one.
+        private IQueryable<Company> CompaniesWithProfile() =>
+            _dbContext
+                .Companies.Include(c => c.Profile)
+                .ThenInclude(p => p.ContactEmail)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.CompanyAddress)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.ContactPhone)
+                .Include(c => c.Profile)
+                .ThenInclude(p => p.IndustryTypes);
+
         public async Task<Company> AddAsync(Company entity)
         {
             if (entity == null)
@@ -34,31 +48,12 @@ namespace Rinzo.Infrastructure.Repositories.Companies
 
         public async Task<List<Company>> GetAllAsync()
         {
-            return await _dbContext
-                .Companies.Include(c => c.Profile)
-                .ThenInclude(p => p.ContactEmail)
-                .Include(c => c.Profile)
-                .ThenInclude(p => p.CompanyAddress)
-                .Include(c => c.Profile)
-                .ThenInclude(p => p.ContactPhone)
-                .Include(c => c.Profile)
-                .ThenInclude(p => p.IndustryTypes)
-                .ToListAsync();
+            return await CompaniesWithProfile().ToListAsync();
         }
 
         public async Task<Company> GetByIdAsync(string id)
         {
-            var company = await _dbContext
-                .Companies.Where(c => c.Id == id)
-                .Include(c => c.Profile)
-                .ThenInclude(p => p.ContactEmail)
-                .Include(c => c.Profile)
-                .ThenInclude(p => p.CompanyAddress)
-                .Include(c => c.Profile)
-                .ThenInclude(p => p.ContactPhone)
-                .Include(c => c.Profile)
-                .ThenInclude(p => p.IndustryTypes)
-                .FirstOrDefaultAsync();
+            var company = await CompaniesWithProfile().FirstOrDefaultAsync(c => c.Id == id);
 
             return company ?? throw new KeyNotFoundException($"Company with id {id} not found");
         }

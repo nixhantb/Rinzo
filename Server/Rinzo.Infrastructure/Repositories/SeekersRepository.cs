@@ -64,6 +64,13 @@ namespace Rinzo.Infrastructure.Repositories.Seekers
 
         public async Task<Seeker> GetByIdAsync(string id)
         {
+            // Education, Qualifications, Experience, Projects, and SocialMedias are all
+            // separate one-to-many collections. Including more than one collection in a
+            // single query makes EF Core join them all together, and those joins
+            // multiply row counts against each other (Education count x Experience count
+            // x Qualifications count x ...) instead of just adding them up - the classic
+            // EF Core "cartesian explosion". AsSplitQuery() makes EF issue one query per
+            // collection instead of one giant join, which is what this shape needs.
             var seeker = await _dbContext
                 .Seekers.Include(p => p.PersonName)
                 .Include(c => c.Phone)
@@ -75,6 +82,7 @@ namespace Rinzo.Infrastructure.Repositories.Seekers
                 .ThenInclude(e => e.Company)
                 .Include(p => p.Projects)
                 .Include(s => s.SocialMedias)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(j => j.Id == id);
 
             return seeker ?? throw new KeyNotFoundException($"Seeker with id {id} not found");
