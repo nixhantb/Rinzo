@@ -128,9 +128,26 @@ namespace Rinzo.Infrastructure.Repositories.Companies
             return application;
         }
 
-        public Task DeleteAsync(string id)
+        public async Task DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            // Nothing else holds an FK back to Application, so removing the row itself
+            // can never hit a constraint. ApplicationDate and Status are included anyway
+            // because - unlike Company/Jobs/Seekers, which Application only references and
+            // must never delete - each Application gets its own fresh ApplicationDate and
+            // Status created just for it (see AddAsync/ApplyForJobAsync), so leaving them
+            // out would just orphan them instead of actually cleaning up.
+            var existing = await _dbContext
+                .Applications.Include(a => a.ApplicationDate)
+                .Include(a => a.Status)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Application with id {id} not found");
+            }
+
+            _dbContext.Applications.Remove(existing);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Application>> GetAllAsync()
@@ -166,14 +183,70 @@ namespace Rinzo.Infrastructure.Repositories.Companies
             return await ApplicationsWithDetails().Where(a => a.SeekerId == seekerId).ToListAsync();
         }
 
-        public Task<Application> UpdateApplicationStatusAsync(string applicationId, Status status)
+        public async Task<Application> UpdateApplicationStatusAsync(
+            string applicationId,
+            Status status
+        )
         {
-            throw new NotImplementedException();
+            if (status == null)
+            {
+                throw new ArgumentNullException(nameof(status));
+            }
+
+            var existing = await _dbContext
+                .Applications.Include(a => a.Status)
+                .FirstOrDefaultAsync(a => a.Id == applicationId);
+
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Application with id {applicationId} not found");
+            }
+
+            // Status is exclusively this application's own (created fresh in
+            // AddAsync/ApplyForJobAsync), so mutating it in place is safe - it's not a
+            // shared row like Company.
+            existing.Status ??= new Status();
+            existing.Status.StatusName = status.StatusName;
+
+            await _dbContext.SaveChangesAsync();
+
+            return existing;
         }
 
-        public Task UpdateAsync(Application entity)
+        public async Task UpdateAsync(Application entity)
         {
-            throw new NotImplementedException();
+            var existing = await ApplicationsWithDetails()
+                .FirstOrDefaultAsync(a => a.Id == entity.Id);
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Application with id {entity.Id} not found");
+            }
+
+            UpdateDetails(existing, entity);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private static void UpdateDetails(Application existing, Application updated)
+        {
+            existing.SeekerId = updated.SeekerId;
+            existing.CompanyId = updated.CompanyId;
+            existing.JobsId = updated.JobsId;
+
+            if (updated.ApplicationDate != null)
+            {
+                existing.ApplicationDate ??= new ApplicationDate();
+                existing.ApplicationDate.SubmitDate = updated.ApplicationDate.SubmitDate;
+                existing.ApplicationDate.ReviewDate = updated.ApplicationDate.ReviewDate;
+                existing.ApplicationDate.DecisionDate = updated.ApplicationDate.DecisionDate;
+                existing.ApplicationDate.Comments = updated.ApplicationDate.Comments;
+            }
+
+            if (updated.Status != null)
+            {
+                existing.Status ??= new Status();
+                existing.Status.StatusName = updated.Status.StatusName;
+            }
         }
     }
 }
