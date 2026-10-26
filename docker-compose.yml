@@ -31,8 +31,8 @@ services:
     env_file:
       - .env
     environment:
-      DB_HOST: rinzo-database
       ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: "Host=rinzo-database;Port=${DB_PORT};Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}"
 
 volumes:
   db_data:
