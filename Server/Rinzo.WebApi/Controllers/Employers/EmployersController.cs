@@ -1,19 +1,57 @@
-using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Rinzo.Core.Entities.Employers;
-using Rinzo.Core.Interfaces.Employers;
+using Rinzo.Application.Employers;
+using Rinzo.Application.Export;
 
-namespace Rinzo.WebApi.Controllers.Employers
+namespace Rinzo.WebApi.Controllers.Employers;
+
+[ApiController]
+[Route("api/employers")]
+public sealed class EmployersController(
+    IEmployerService employers,
+    IExporterFactory<EmployerResponse> exporters
+) : ControllerBase
 {
-    [Authorize]
-    [Route("api/employers")]
-    public class EmployerController : BaseApiController<Employer, IEmployerRepository>
+    [HttpGet]
+    public async Task<IActionResult> GetAll(
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken ct = default
+    ) => Ok(await employers.GetPagedAsync(page, pageSize, ct));
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken ct) =>
+        Ok(await employers.GetByIdAsync(id, ct));
+
+    [HttpPost]
+    [ProducesResponseType(typeof(EmployerResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create(EmployerRequest request, CancellationToken ct)
     {
-        public EmployerController(
-            IEmployerRepository employerRepository,
-            IValidator<Employer> validator
-        )
-            : base(employerRepository, validator) { }
+        var created = await employers.CreateAsync(request, ct);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+    }
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update(Guid id, EmployerRequest request, CancellationToken ct)
+    {
+        await employers.UpdateAsync(id, request, ct);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        await employers.DeleteAsync(id, ct);
+        return NoContent();
+    }
+
+    [HttpGet("export")]
+    public async Task<IActionResult> Export(string format = "csv", CancellationToken ct = default)
+    {
+        var exporter = exporters.Get(format);
+        var data = await employers.ListAllAsync(ct);
+        return File(exporter.Export(data), exporter.ContentType, $"employers.{exporter.Format}");
     }
 }

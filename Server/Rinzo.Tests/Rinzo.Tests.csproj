@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
@@ -17,9 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rinzo.Core\Rinzo.Core.csproj" />
-    <ProjectReference Include="..\Rinzo.Infrastructure\Rinzo.Infrastructure.csproj" />
-    <ProjectReference Include="..\Rinzo.WebApi\Rinzo.WebApi.csproj" />
+    <ProjectReference Include="..\Rinzo.Domain\Rinzo.Domain.csproj" />
+    <ProjectReference Include="..\Rinzo.Application\Rinzo.Application.csproj" />
   </ItemGroup>
 
 </Project>

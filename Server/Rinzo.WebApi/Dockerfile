@@ -1,26 +1,27 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# ---------- Stage 1: build ----------
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-COPY ["Server/Rinzo.sln", "Server/"]
-COPY ["Server/Rinzo.Core/Rinzo.Core.csproj", "Server/Rinzo.Core/"]
-COPY ["Server/Rinzo.Infrastructure/Rinzo.Infrastructure.csproj", "Server/Rinzo.Infrastructure/"]
-COPY ["Server/Rinzo.WebApi/Rinzo.WebApi.csproj", "Server/Rinzo.WebApi/"]
-COPY ["Server/Rinzo.Tests/Rinzo.Tests.csproj", "Server/Rinzo.Tests/"]
-RUN dotnet restore "Server/Rinzo.WebApi/Rinzo.WebApi.csproj"
+# Copy only the project files first, then restore. Docker caches this layer, so a
+# code-only change does not re-download packages.
+COPY Server/Rinzo.sln Server/
+COPY Server/Rinzo.Domain/Rinzo.Domain.csproj Server/Rinzo.Domain/
+COPY Server/Rinzo.Application/Rinzo.Application.csproj Server/Rinzo.Application/
+COPY Server/Rinzo.Infrastructure/Rinzo.Infrastructure.csproj Server/Rinzo.Infrastructure/
+COPY Server/Rinzo.WebApi/Rinzo.WebApi.csproj Server/Rinzo.WebApi/
+RUN dotnet restore Server/Rinzo.WebApi/Rinzo.WebApi.csproj
 
-COPY Server/Rinzo.Core/ Server/Rinzo.Core/
+# Now copy the source code and publish
+COPY Server/Rinzo.Domain/ Server/Rinzo.Domain/
+COPY Server/Rinzo.Application/ Server/Rinzo.Application/
 COPY Server/Rinzo.Infrastructure/ Server/Rinzo.Infrastructure/
 COPY Server/Rinzo.WebApi/ Server/Rinzo.WebApi/
+RUN dotnet publish Server/Rinzo.WebApi/Rinzo.WebApi.csproj -c Release -o /app/publish --no-restore /p:UseAppHost=false
 
-WORKDIR /src/Server/Rinzo.WebApi
-RUN dotnet build "Rinzo.WebApi.csproj" -c Release -o /app/build --no-restore
-
-FROM build AS publish
-RUN dotnet publish "Rinzo.WebApi.csproj" -c Release -o /app/publish --no-restore /p:UseAppHost=false
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+# ---------- Stage 2: run ----------
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
+COPY --from=build /app/publish .
+USER $APP_UID
 EXPOSE 8080
-COPY --from=publish /app/publish .
-ENV ASPNETCORE_URLS="http://+:8080"
 ENTRYPOINT ["dotnet", "Rinzo.WebApi.dll"]
