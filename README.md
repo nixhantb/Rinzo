@@ -9,6 +9,9 @@ Rinzo is a recruitment platform
 
 [![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/nixhantb/rinzo?utm_source=readme&utm_medium=badge)
 
+[![Architecture diagram of nixhantb/rinzo](https://gitdiagram.com/nixhantb/rinzo/diagram.png)](https://gitdiagram.com/nixhantb/rinzo?utm_source=readme&utm_medium=picture)
+
+
 ## Running locally
 
 ```bash
